@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import EligibilityBadge from './EligibilityBadge'
 import { useApp } from '../../context/AppContext'
+import TTSButton from '../Voice/TTSButton'
 
 const BORDER = {
   eligible:    'border-green-500/30 bg-green-500/[0.04]',
@@ -37,18 +38,21 @@ export default function SchemeCard({ scheme, onGetGuidance, index = 0 }) {
           </div>
         </div>
 
-        {/* Apply button – only for eligible */}
-        {scheme.status === 'eligible' && scheme.apply_url && (
-          <a
-            href={scheme.apply_url}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={`Apply for ${scheme.scheme_name}`}
-            className="flex-shrink-0 px-4 py-2 rounded-lg bg-green-600 hover:bg-green-500 text-white text-xs font-bold transition-colors glow-green whitespace-nowrap"
-          >
-            {t('apply_now')}
-          </a>
-        )}
+        {/* Action buttons */}
+        <div className="flex-shrink-0 flex flex-col items-end gap-2">
+          {scheme.status === 'eligible' && scheme.apply_url && (
+            <a
+              href={scheme.apply_url}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Apply for ${scheme.scheme_name}`}
+              className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-500 text-white text-xs font-bold transition-colors glow-green whitespace-nowrap"
+            >
+              {t('apply_now')}
+            </a>
+          )}
+          <TTSButton text={scheme.description} className="scale-75 origin-right" />
+        </div>
       </div>
 
       {/* Not eligible reason */}

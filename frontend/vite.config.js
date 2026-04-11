@@ -1,21 +1,17 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-const BACKEND_URL = process.env.VITE_API_URL || 'http://localhost:5000'
-
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react()],
-  base: '/pragyantra-HC21-HC-2/',   // ← must match your GitHub repo name
+  // base is only set during production build (for GitHub Pages)
+  base: command === 'build' ? '/pragyantra-HC21-HC-2/' : '/',
   server: {
     port: 3000,
     proxy: {
       '/api': {
-        target: BACKEND_URL,
+        target: 'http://localhost:5000',
         changeOrigin: true,
       },
     },
   },
-  define: {
-    __API_URL__: JSON.stringify(BACKEND_URL),
-  },
-})
+}))

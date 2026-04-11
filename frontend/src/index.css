@@ -125,3 +125,14 @@
 /* ── Scrollbar hide ── */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Leaflet overrides ── */
+.leaflet-container {
+  font-family: inherit;
+  z-index: 10;
+  background-color: transparent !important;
+}
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+}

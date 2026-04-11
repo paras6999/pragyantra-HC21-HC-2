@@ -3,6 +3,7 @@ import { AppProvider } from './context/AppContext'
 import HomePage    from './pages/HomePage'
 import WizardPage  from './pages/WizardPage'
 import ResultsPage from './pages/ResultsPage'
+import ChatbotWidget from './components/Chatbot/ChatbotWidget'
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
           <Route path="/wizard"  element={<WizardPage />}  />
           <Route path="/results" element={<ResultsPage />} />
         </Routes>
+        <ChatbotWidget />
       </BrowserRouter>
     </AppProvider>
   )

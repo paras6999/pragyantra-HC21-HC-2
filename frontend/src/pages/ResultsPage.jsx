@@ -4,6 +4,7 @@ import { useApp } from '../context/AppContext'
 import SchemeCard             from '../components/Results/SchemeCard'
 import EligibilityScore       from '../components/Results/EligibilityScore'
 import DocumentGuidancePanel  from '../components/Guidance/DocumentGuidancePanel'
+import GreyZoneMapPanel       from '../components/Map/GreyZoneMapPanel'
 import LanguageSwitcher       from '../components/shared/LanguageSwitcher'
 
 const TABS = [
@@ -44,6 +45,8 @@ export default function ResultsPage() {
   }
 
   const displayed = FILTERED[activeTab] || allSchemes
+
+  const displayedDocsMissing = Array.from(new Set(displayed.flatMap(s => s.missing_docs || [])))
 
   const tabCount = (key) => ({
     all: total, eligible: eligible.length, grey_zone: grey_zone.length, not_eligible: not_eligible.length,
@@ -127,6 +130,13 @@ export default function ResultsPage() {
             ))
           )}
         </div>
+
+        {/* ── Gray Zone Map Panel ── */}
+        {displayedDocsMissing.length > 0 && (
+          <div className="animate-slide-in-up" style={{ animationDelay: '200ms' }}>
+            <GreyZoneMapPanel missingDocs={displayedDocsMissing} />
+          </div>
+        )}
 
         {/* ── Recommendation footer ── */}
         <div className="glass rounded-2xl p-5 flex items-start gap-4 animate-slide-in-up">

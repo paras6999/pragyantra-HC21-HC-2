@@ -324,5 +324,127 @@
       "age_range": [15, 40]
     },
     "apply_url": "https://www.msde.gov.in/"
+  },
+  {
+    "id": "ayushman_bharat",
+    "name": "Ayushman Bharat PM-JAY",
+    "category": "health",
+    "description": "Pradhan Mantri Jan Arogya Yojana covers health insurance of up to ₹5 Lakhs per family per year, including persons with primary disabilities.",
+    "benefits": [
+      "Up to ₹5 Lakh per year health coverage",
+      "Cashless access to health care services",
+      "Covers up to 3 days of pre-hospitalization and 15 days post-hospitalization",
+      "Eligible across all empanelled hospitals in India"
+    ],
+    "required_documents": ["Aadhaar Card", "Health Card", "BPL Card"],
+    "required_documents_keys": ["aadhaar_card", "health_card", "bpl_card"],
+    "eligibility_rules": {
+      "max_income": 100000,
+      "min_disability_percent": 0,
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","intellectual","mental_illness","multiple_disabilities","autism","cerebral_palsy","specific_learning_disability"],
+      "age_range": [0, 100]
+    },
+    "apply_url": "https://pmjay.gov.in/"
+  },
+  {
+    "id": "disha_scheme",
+    "name": "DISHA Scheme",
+    "category": "health",
+    "description": "Early intervention and School Readiness Scheme for children with Autism, Cerebral Palsy, Mental Retardation and Multiple Disabilities.",
+    "benefits": [
+      "Free early intervention and daily living skills training",
+      "Rehabilitation therapy services",
+      "Pre-school education",
+      "Provision of transport and allowance"
+    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Medical Reports", "Income Certificate"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "medical_reports", "income_certificate"],
+    "eligibility_rules": {
+      "max_income": null,
+      "min_disability_percent": 35,
+      "allowed_disability_types": ["autism","cerebral_palsy","intellectual","multiple_disabilities"],
+      "age_range": [0, 10]
+    },
+    "apply_url": "https://thenationaltrust.gov.in/"
+  },
+  {
+    "id": "nrhm_rehab",
+    "name": "NRHM Disability Support",
+    "category": "health",
+    "description": "National Rural Health Mission supports the rehabilitation of PWDs at community level through ASHA workers and PHCs.",
+    "benefits": [
+      "Community based rehabilitation services",
+      "Referrals to specialist centres",
+      "Provision of preliminary assistive therapy"
+    ],
+    "required_documents": ["Aadhaar Card", "Medical Reports"],
+    "required_documents_keys": ["aadhaar_card", "medical_reports"],
+    "eligibility_rules": {
+      "max_income": null,
+      "min_disability_percent": 0,
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","intellectual","mental_illness","multiple_disabilities","autism","cerebral_palsy","specific_learning_disability"],
+      "age_range": [0, 100]
+    },
+    "apply_url": "https://nhm.gov.in/"
+  },
+  {
+    "id": "swavlamban_insurance",
+    "name": "Swavlamban Disability Insurance",
+    "category": "health",
+    "description": "Group Medical Insurance Scheme for Persons with Disabilities, focusing on affordability for individuals not covered by Niramaya.",
+    "benefits": [
+      "Health cover up to ₹2 Lakh",
+      "Coverage against general hospitalisation",
+      "Includes OPD coverage for disability specific requirements"
+    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Income Certificate"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "income_certificate"],
+    "eligibility_rules": {
+      "max_income": 300000,
+      "min_disability_percent": 40,
+      "allowed_disability_types": ["locomotor","visual","hearing","speech"],
+      "age_range": [18, 65]
+    },
+    "apply_url": "https://disabilityaffairs.gov.in/"
+  },
+  {
+    "id": "alimco",
+    "name": "ALIMCO Assistive Devices",
+    "category": "other",
+    "description": "Manufacturing and distribution of subsidised prosthetics, orthotics and high-end assistive devices by Artificial Limbs Manufacturing Corporation of India.",
+    "benefits": [
+      "High quality standard aids and appliances",
+      "Subsidised cost for lower income groups",
+      "Custom fits and repair services"
+    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Medical Reports", "Income Certificate"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "medical_reports", "income_certificate"],
+    "eligibility_rules": {
+      "max_income": 300000,
+      "min_disability_percent": 40,
+      "allowed_disability_types": ["locomotor","hearing","visual"],
+      "age_range": [0, 100]
+    },
+    "apply_url": "https://www.alimco.in/"
+  },
+  {
+    "id": "rci_training",
+    "name": "RCI Rehabilitation Training",
+    "category": "employment",
+    "description": "Training programs approved by Rehabilitation Council of India for individuals with disabilities looking for specialized skills in rehabilitation fields.",
+    "benefits": [
+      "Rehabilitation professional certification",
+      "Subsidized training fee",
+      "Placement assistance"
+    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Educational Certificates"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "educational_certificates"],
+    "eligibility_rules": {
+      "max_income": null,
+      "min_disability_percent": 40,
+      "allowed_disability_types": ["locomotor","visual","hearing","speech"],
+      "age_range": [18, 45]
+    },
+    "apply_url": "https://rehabcouncil.nic.in/"
   }
 ]

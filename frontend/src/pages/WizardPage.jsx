@@ -14,6 +14,7 @@ export default function WizardPage() {
   const {
     currentStep, setCurrentStep,
     formData, setResults, setIsLoading, isLoading,
+    selectedCategory,
     t,
   } = useApp()
 
@@ -29,6 +30,7 @@ export default function WizardPage() {
   const handleSubmit = async () => {
     setIsLoading(true)
     const payload = {
+      selected_category: selectedCategory,
       age:                Number(formData.age),
       income:             Number(formData.income),
       disability_percent: formData.has_disability_cert ? Number(formData.disability_percent) : 0,

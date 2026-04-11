@@ -3,21 +3,39 @@ from flask_cors import CORS
 import json
 import os
 import requests
-from openai import OpenAI
+from dotenv import load_dotenv
 from pymongo import MongoClient
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
+BASE = os.path.dirname(__file__)
+load_dotenv(os.path.join(BASE, '.env'))
 
+# ── API Keys ──────────────────────────────────────────────────────────────────
+GEMINI_API_KEY     = os.environ.get("GEMINI_API_KEY")
+GOOGLE_MAPS_KEY    = os.environ.get("GOOGLE_MAPS_API_KEY")
+OPENAI_API_KEY     = os.environ.get("OPENAI_API_KEY")   # kept as fallback
+
+# ── Gemini client setup ────────────────────────────────────────────────────────
+gemini_model = None
+if GEMINI_API_KEY:
+    try:
+        import google.generativeai as genai
+        genai.configure(api_key=GEMINI_API_KEY)
+        gemini_model = genai.GenerativeModel("gemini-pro")
+        print("✅  Gemini AI configured successfully")
+    except Exception as e:
+        print(f"⚠️  Gemini setup failed: {e}")
+        gemini_model = None
+
+# ── Flask app ─────────────────────────────────────────────────────────────────
 app = Flask(__name__)
 CORS(app)
 
-BASE = os.path.dirname(__file__)
-MONGO_URI = os.environ.get("MONGO_URI")
-MONGO_DB_NAME = os.environ.get("MONGO_DB", "sahayak")
+# ── MongoDB setup ──────────────────────────────────────────────────────────────
+MONGO_URI        = os.environ.get("MONGO_URI")
+MONGO_DB_NAME    = os.environ.get("MONGO_DB", "sahayak")
 MONGO_COLLECTION = os.environ.get("MONGO_COLLECTION", "schemes")
 
-mongo_client = None
+mongo_client    = None
 mongo_available = False
 
 if MONGO_URI:
@@ -25,13 +43,14 @@ if MONGO_URI:
         mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
         mongo_client.admin.command("ping")
         mongo_available = True
-        print("Connected to MongoDB")
+        print("✅  Connected to MongoDB Atlas")
     except Exception as err:
-        mongo_client = None
+        mongo_client    = None
         mongo_available = False
-        print(f"MongoDB connection failed: {err}")
+        print(f"⚠️  MongoDB connection failed: {err}")
 
 
+# ── Helpers ────────────────────────────────────────────────────────────────────
 def load_json(filename):
     with open(os.path.join(BASE, filename), encoding="utf-8") as f:
         return json.load(f)
@@ -41,22 +60,41 @@ def load_schemes():
     json_schemes = load_json("schemes.json")
     if not mongo_available:
         return json_schemes
-
     try:
         collection = mongo_client[MONGO_DB_NAME][MONGO_COLLECTION]
         schemes = list(collection.find({}, {"_id": False}))
         if len(schemes) >= len(json_schemes):
             return schemes
-        print(
-            f"MongoDB returned {len(schemes)} schemes, falling back to JSON dataset ({len(json_schemes)} schemes)."
-        )
+        print(f"MongoDB returned {len(schemes)} schemes, falling back to JSON ({len(json_schemes)} schemes).")
     except Exception as err:
         print(f"Failed to load schemes from MongoDB: {err}")
-
     return json_schemes
 
 
-# ── GET /api/categories ────────────────────────────────────────────────────────
+# ── GET /api/status ─────────────────────────────────────────────────────────────
+@app.route("/api/status", methods=["GET"])
+def get_status():
+    return jsonify({
+        "gemini_configured": bool(gemini_model),
+        "google_maps_key_set": bool(GOOGLE_MAPS_KEY),
+        "mongo_uri_set": bool(MONGO_URI),
+        "mongo_available": mongo_available,
+        "mongo_db": MONGO_DB_NAME,
+        "mongo_collection": MONGO_COLLECTION,
+        "scheme_source": "mongo" if mongo_available else "json",
+    })
+
+
+# ── GET /api/maps_key ──────────────────────────────────────────────────────────
+@app.route("/api/maps_key", methods=["GET"])
+def get_maps_key():
+    """Safely expose the Google Maps JS key to the frontend."""
+    if not GOOGLE_MAPS_KEY:
+        return jsonify({"error": "GOOGLE_MAPS_API_KEY not configured"}), 500
+    return jsonify({"key": GOOGLE_MAPS_KEY})
+
+
+# ── GET /api/categories ─────────────────────────────────────────────────────────
 @app.route("/api/categories", methods=["GET"])
 def get_categories():
     categories = [
@@ -71,13 +109,13 @@ def get_categories():
     return jsonify(categories)
 
 
-# ── GET /api/schemes ───────────────────────────────────────────────────────────
+# ── GET /api/schemes ────────────────────────────────────────────────────────────
 @app.route("/api/schemes", methods=["GET"])
 def get_schemes():
     return jsonify(load_schemes())
 
 
-# ── POST /api/check_eligibility ───────────────────────────────────────────────
+# ── POST /api/check_eligibility ─────────────────────────────────────────────────
 @app.route("/api/check_eligibility", methods=["POST"])
 def check_eligibility():
     from eligibility_engine import run_eligibility
@@ -87,7 +125,7 @@ def check_eligibility():
     return jsonify(results)
 
 
-# ── GET /api/document_guidance/<doc_id> ───────────────────────────────────────
+# ── GET /api/document_guidance/<doc_id> ─────────────────────────────────────────
 @app.route("/api/document_guidance/<doc_id>", methods=["GET"])
 def get_document_guidance(doc_id):
     guidance = load_json("document_guidance.json")
@@ -96,39 +134,59 @@ def get_document_guidance(doc_id):
     return jsonify({"error": "Guidance not found for this document"}), 404
 
 
-# ── POST /api/chat ─────────────────────────────────────────────────────────────
+# ── POST /api/chat  (Gemini-powered) ────────────────────────────────────────────
 @app.route("/api/chat", methods=["POST"])
 def chat():
     data = request.get_json(force=True)
-    user_message = data.get("message", "")
-    
-    # System prompt strictly restricts to disability schemes
-    system_prompt = (
-        "You are Sahayak, an AI assistant for disability schemes in India. "
-        "You ONLY answer questions related to government disability schemes, eligibility, required documents, "
-        "and physical centers (like CSCs or hospitals) for these matters. "
-        "If a user asks about anything unrelated (e.g., weather, coding, general knowledge), "
-        "you MUST reply ONLY with: 'I can only help with disability schemes and related queries.'"
-    )
-    
-    if not client:
-        return jsonify({"error": "OPENAI_API_KEY is not configured."}), 500
+    user_message = data.get("message", "").strip()
+    # chat_history is a list of {role, text} objects from the frontend
+    history = data.get("history", [])
 
-    try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_message}
-            ],
-            temperature=0.3
-        )
-        return jsonify({"reply": response.choices[0].message.content})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    if not user_message:
+        return jsonify({"error": "Empty message"}), 400
+
+    # ── Gemini path ──────────────────────────────────────────────────────────
+    if gemini_model:
+        try:
+            # Build conversation history for multi-turn chat
+            system_prompt = (
+                "You are Sahayak, an expert AI assistant for disability-related government "
+                "schemes in India. You ONLY answer questions related to: government disability "
+                "schemes, eligibility criteria, required documents, application procedures, "
+                "and physical centers (CSCs, hospitals, banks, post offices) for these matters. "
+                "Be empathetic, concise and helpful. Format lists with bullet points. "
+                "If a user asks about ANYTHING unrelated to disability schemes, documents or "
+                "government services, you MUST reply ONLY with: "
+                "'I can only help with disability schemes and related queries.'"
+            )
+            # gemini-pro requires alternating user/model roles. We fold the system prompt into the first user message.
+            gemini_history = []
+            
+            # If there's an existing history, prepend the system prompt to the first user message
+            if history and len(history) > 0:
+                first_msg = history[0].get("text", "")
+                gemini_history.append({"role": "user", "parts": [f"{system_prompt}\n\nUser Question: {first_msg}"]})
+                
+                # Append the rest of the history
+                for msg in history[1:]:
+                    role = "user" if msg.get("role") == "user" else "model"
+                    gemini_history.append({"role": role, "parts": [msg.get("text", "")]})
+            else:
+                # If no history, prepend it to the current user message
+                user_message = f"{system_prompt}\n\nUser Question: {user_message}"
+
+            chat_session = gemini_model.start_chat(history=gemini_history)
+            response = chat_session.send_message(user_message)
+            reply = response.text
+            return jsonify({"reply": reply, "engine": "gemini"})
+        except Exception as e:
+            print(f"Gemini error: {e}")
+            return jsonify({"error": f"Gemini API error: {str(e)}"}), 500
+
+    return jsonify({"error": "Gemini AI model failed to initialize. Please check if 'google-generativeai' is installed."}), 500
 
 
-# ── GET /api/nearby_centers ─────────────────────────────────────────────────────────────
+# ── GET /api/nearby_centers  (Overpass API) ─────────────────────────────────────
 @app.route("/api/nearby_centers", methods=["GET"])
 def nearby_centers():
     lat = request.args.get("lat")
@@ -168,7 +226,7 @@ def nearby_centers():
         centers = []
         for el in data.get("elements", []):
             name = el.get("tags", {}).get("name", f"Local {center_type.replace('_', ' ').title()}")
-            addr = el.get("tags", {}).get("addr:full", "Address not specified, please refer to map.")
+            addr = el.get("tags", {}).get("addr:full", "Address not specified.")
             centers.append({
                 "id": el.get("id"),
                 "name": name,

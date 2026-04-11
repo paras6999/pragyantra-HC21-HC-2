@@ -29,10 +29,14 @@ def run_eligibility(user: dict, schemes: list) -> dict:
     income = int(user.get("income", 0))
     disability_pct = int(user.get("disability_percent", 0))
     docs: dict[str, bool] = user.get("documents", {})
+    selected_category = user.get("selected_category", "all")
 
     results = []
 
     for scheme in schemes:
+        if selected_category != "all" and scheme.get("category", "other") != selected_category:
+            continue
+
         rules: dict[str, Any] = scheme.get("eligibility_rules", {})
         required_doc_keys: list[str] = scheme.get("required_documents_keys", [])
 
