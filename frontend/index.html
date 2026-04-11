@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+        content="Disability Entitlement Navigator — Discover welfare schemes, benefits, and legal entitlements available to persons with disabilities in India. Powered by Team EmpowerAble." />
+  <meta name="keywords"
+        content="disability entitlement, disability welfare, PWD benefits India, accessible government schemes, EmpowerAble" />
+  <meta name="author" content="Team EmpowerAble — Pragyantra Hackathon" />
+
+  <!-- Open Graph -->
+  <meta property="og:title"       content="Disability Entitlement Navigator | EmpowerAble" />
+  <meta property="og:description" content="Find welfare schemes and legal entitlements for persons with disabilities." />
+  <meta property="og:type"        content="website" />
+
+  <!-- Accessible color-scheme declaration -->
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color"  content="#0a0d14" />
+
+  <title>Disability Entitlement Navigator | EmpowerAble</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Preconnect to Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+
+<body>
+
+  <!-- ======================================================
+       SKIP NAVIGATION (accessibility — keyboard users)
+       ====================================================== -->
+  <a href="#form-section" class="sr-only" id="skip-link"
+     style="position:absolute;top:1rem;left:1rem;z-index:999;
+            padding:0.75rem 1.25rem;
+            background:var(--clr-accent-glow);color:#0a0d14;
+            font-weight:700;border-radius:var(--radius-md);
+            text-decoration:none;
+            transform:translateY(-120%);transition:transform 0.2s;">
+    Skip to Eligibility Check
+  </a>
+
+  <!-- ======================================================
+       HEADER
+       ====================================================== -->
+  <header id="site-header" role="banner">
+    <div class="container header__inner">
+
+      <!-- Logo -->
+      <a href="/" class="header__logo" aria-label="EmpowerAble — go to homepage">
+        <div class="header__logo-icon" aria-hidden="true">♿</div>
+        <span class="header__logo-wordmark">
+          <span class="logo-empower">Empower</span><span class="logo-able">Able</span>
+        </span>
+      </a>
+
+      <!-- Read Aloud Button -->
+      <button id="tts-btn"
+              type="button"
+              aria-label="Read page aloud using text-to-speech"
+              aria-pressed="false">
+        <span class="tts-btn__icon" aria-hidden="true">🔊</span>
+        <span class="tts-btn__label">Read Aloud</span>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- ======================================================
+       MAIN CONTENT
+       ====================================================== -->
+  <main id="main-content">
+
+    <!-- ====================================================
+         HERO SECTION
+         ==================================================== -->
+    <section id="hero-section" aria-labelledby="hero-title">
+      <div class="container hero__inner">
+
+        <!-- Left: Text Content -->
+        <div class="hero__content">
+
+          <!-- Badge -->
+          <div class="hero__badge" role="note" aria-label="Platform feature highlight">
+            100% Free &amp; Accessible Navigator
+          </div>
+
+          <!-- Headline -->
+          <h1 id="hero-title" class="hero__title">
+            <span class="hero__title-gradient">Discover Your<br>Entitlements</span>
+          </h1>
+
+          <!-- Subtitle -->
+          <p class="hero__subtitle">
+            EmpowerAble helps persons with disabilities in India instantly discover
+            government welfare schemes, legal rights, and benefits they qualify for —
+            all in one accessible, easy-to-use platform.
+            <br /><br />
+            Answer a few simple questions and get a personalised entitlement report in
+            under two minutes.
+          </p>
+
+          <!-- CTA group -->
+          <div class="hero__cta-group">
+            <!-- Primary CTA — scrolls to form -->
+            <a id="check-eligibility-btn"
+               href="#form-section"
+               role="button"
+               aria-label="Check your eligibility — scroll to the form below">
+              <span>Check Eligibility</span>
+              <span class="cta-btn__arrow" aria-hidden="true">↓</span>
+            </a>
+
+            <!-- Secondary link -->
+            <a href="#results-section"
+               class="hero__learn-more"
+               aria-label="See how the platform works">
+              How it works ›
+            </a>
+          </div>
+
+          <!-- Statistics strip -->
+          <div class="hero__stats" role="list" aria-label="Platform statistics">
+            <div class="hero__stat" role="listitem">
+              <span class="hero__stat-value">500+</span>
+              <span class="hero__stat-label">Schemes Listed</span>
+            </div>
+            <div class="hero__stat" role="listitem">
+              <span class="hero__stat-value">21</span>
+              <span class="hero__stat-label">Disability Types</span>
+            </div>
+            <div class="hero__stat" role="listitem">
+              <span class="hero__stat-value">100%</span>
+              <span class="hero__stat-label">Free to Use</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Visual Card Stack -->
+        <div class="hero__visual" aria-hidden="true">
+          <div class="hero__card-stack">
+
+            <!-- Background card: top -->
+            <div class="hero__feature-card hero__feature-card--top">
+              <div class="card__icon">🏥</div>
+              <div class="card__title">Healthcare Benefits</div>
+              <div class="card__desc">Medical aids, assistive devices &amp; free treatment</div>
+            </div>
+
+            <!-- Main floating card -->
+            <div class="hero__feature-card hero__feature-card--main">
+              <div class="card__icon">🎯</div>
+              <div class="card__title">Personalised Entitlement Report</div>
+              <div class="card__desc">
+                Based on your disability type, income, and state — we surface
+                exactly the schemes you qualify for.
+              </div>
+              <span class="card__pill card__pill--blue">Smart Matching ✦</span>
+            </div>
+
+            <!-- Background card: bottom -->
+            <div class="hero__feature-card hero__feature-card--bottom">
+              <div class="card__icon">💼</div>
+              <div class="card__title">Employment &amp; Education</div>
+              <div class="card__desc">Reservation, scholarships &amp; skill programmes</div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /.hero__inner -->
+    </section><!-- /#hero-section -->
+
+    <!-- Divider -->
+    <div class="section-divider" role="separator" aria-hidden="true"></div>
+
+    <!-- ====================================================
+         FORM SECTION (content injected by app JS)
+         ==================================================== -->
+    <section id="form-section"
+             aria-label="Eligibility check form"
+             tabindex="-1">
+      <!-- Eligibility form will be dynamically inserted here -->
+    </section>
+
+    <!-- Divider -->
+    <div class="section-divider" role="separator" aria-hidden="true"></div>
+
+    <!-- ====================================================
+         RESULTS SECTION (content injected by app JS)
+         ==================================================== -->
+    <section id="results-section"
+             aria-label="Your entitlement results"
+             aria-live="polite"
+             tabindex="-1">
+      <!-- Personalised entitlement results will appear here -->
+    </section>
+
+  </main>
+
+  <!-- ======================================================
+       FOOTER
+       ====================================================== -->
+  <footer id="site-footer" role="contentinfo">
+    <div class="container footer__inner">
+      <p class="footer__logo-text">
+        Empower<span>Able</span>
+      </p>
+      <p class="footer__tagline">
+        Disability Entitlement Navigator &mdash; Built with ♥ by Team EmpowerAble
+      </p>
+      <p class="footer__copy">
+        Pragyantra Round-1 Hackathon &bull; Modern College of Engineering, Pune &bull; 2026
+      </p>
+    </div>
+  </footer>
+
+  <!-- ======================================================
+       INLINE SCRIPTS
+       ====================================================== -->
+  <script>
+    /* -------- Header scroll class -------- */
+    const header = document.getElementById('site-header');
+    const scrollObs = () => {
+      header.classList.toggle('scrolled', window.scrollY > 20);
+    };
+    window.addEventListener('scroll', scrollObs, { passive: true });
+
+    /* -------- Skip-link show on focus -------- */
+    const skipLink = document.getElementById('skip-link');
+    if (skipLink) {
+      skipLink.addEventListener('focus', () => {
+        skipLink.style.transform = 'translateY(0)';
+      });
+      skipLink.addEventListener('blur', () => {
+        skipLink.style.transform = 'translateY(-120%)';
+      });
+    }
+
+    /* -------- Text-to-Speech (Read Aloud) -------- */
+    const ttsBtn   = document.getElementById('tts-btn');
+    const ttsLabel = ttsBtn.querySelector('.tts-btn__label');
+    const ttsIcon  = ttsBtn.querySelector('.tts-btn__icon');
+
+    let isSpeaking = false;
+
+    function getPageText() {
+      // Collect meaningful text nodes from the page
+      const selectors = [
+        '#hero-title',
+        '.hero__subtitle',
+        '#check-eligibility-btn',
+        '.hero__stat',
+      ];
+      return selectors
+        .map(sel => {
+          const els = document.querySelectorAll(sel);
+          return Array.from(els).map(el => el.textContent.trim()).join('. ');
+        })
+        .filter(Boolean)
+        .join('. ');
+    }
+
+    function stopSpeech() {
+      window.speechSynthesis.cancel();
+      isSpeaking = false;
+      ttsBtn.classList.remove('playing');
+      ttsBtn.setAttribute('aria-pressed', 'false');
+      ttsLabel.textContent = 'Read Aloud';
+      ttsIcon.textContent  = '🔊';
+    }
+
+    function startSpeech() {
+      if (!('speechSynthesis' in window)) {
+        alert('Sorry, your browser does not support text-to-speech.');
+        return;
+      }
+
+      const text = getPageText();
+      const utterance = new SpeechSynthesisUtterance(text);
+
+      // Prefer a clear, neutral English voice
+      const voices = window.speechSynthesis.getVoices();
+      const preferVoice =
+        voices.find(v => v.lang === 'en-IN') ||
+        voices.find(v => v.lang.startsWith('en'));
+      if (preferVoice) utterance.voice = preferVoice;
+
+      utterance.rate   = 0.92;
+      utterance.pitch  = 1;
+      utterance.volume = 1;
+
+      utterance.onend   = stopSpeech;
+      utterance.onerror = stopSpeech;
+
+      window.speechSynthesis.speak(utterance);
+      isSpeaking = true;
+      ttsBtn.classList.add('playing');
+      ttsBtn.setAttribute('aria-pressed', 'true');
+      ttsLabel.textContent = 'Stop Reading';
+      ttsIcon.textContent  = '⏹';
+    }
+
+    ttsBtn.addEventListener('click', () => {
+      if (isSpeaking) {
+        stopSpeech();
+      } else {
+        startSpeech();
+      }
+    });
+
+    // Re-populate voices (Chrome async)
+    if (window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = () => { /* voices ready */ };
+    }
+
+    /* -------- Smooth-scroll CTA -------- */
+    document.getElementById('check-eligibility-btn')
+      .addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.getElementById('form-section');
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Move focus into section for screen-reader users
+          setTimeout(() => target.focus(), 600);
+        }
+      });
+  </script>
+
+</body>
+</html>
