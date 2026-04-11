@@ -1,172 +1,328 @@
 [
   {
-    "id": "scheme_001",
+    "id": "udid_card",
     "name": "UDID Card (Unique Disability ID)",
-    "description": "The UDID Card initiative by the Ministry of Social Justice and Empowerment provides a Unique Disability Identity Card to Persons with Disabilities (PwD) across India. It creates a standardized system for certification, data collection, and seamless delivery of benefits.",
+    "category": "other",
+    "description": "The UDID Card is a Unique Disability Identity Card issued by the Ministry of Social Justice & Empowerment. It creates a standardised national database and enables seamless access to all disability benefits through a single card.",
     "benefits": [
-      "Single-point identification for accessing all government disability benefits",
-      "Elimination of duplicate or fake certificates",
-      "Seamless access to reservations, concessions, and welfare schemes at national level",
-      "Digital health and disability profiling"
+      "Single-point identification for all government disability benefits",
+      "Eliminates need for multiple disability certificates",
+      "Digital health and disability profile",
+      "Accepted across all government schemes nationwide"
     ],
-    "required_documents": [
-      "Aadhaar Card",
-      "Recent passport-size photograph",
-      "Medical certificate from a government-recognized doctor/hospital",
-      "Proof of residence (Ration Card / Voter ID / Utility Bill)",
-      "Birth certificate or age proof"
-    ],
+    "required_documents": ["Passport Size Photo", "Aadhaar Card", "Disability Certificate", "Residence Proof"],
+    "required_documents_keys": ["passport_photo", "aadhaar_card", "disability_certificate", "residence_proof"],
     "eligibility_rules": {
       "max_income": null,
       "min_disability_percent": 40,
-      "allowed_disability_types": [
-        "locomotor",
-        "visual",
-        "hearing",
-        "speech",
-        "intellectual",
-        "mental_illness",
-        "multiple_disabilities",
-        "autism",
-        "cerebral_palsy",
-        "specific_learning_disability"
-      ],
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","intellectual","mental_illness","multiple_disabilities","autism","cerebral_palsy","specific_learning_disability"],
       "age_range": [0, 100]
-    }
+    },
+    "apply_url": "https://www.swavlambancard.gov.in/"
   },
   {
-    "id": "scheme_002",
-    "name": "ADIP Scheme (Assistive Devices for PwD)",
-    "description": "The Assistance to Disabled Persons (ADIP) Scheme is funded by the Ministry of Social Justice and Empowerment. It assists PwDs in procuring durable, sophisticated, and scientifically manufactured modern, standard aids and assistive devices that can promote their physical, social, and psychological rehabilitation.",
+    "id": "adip_scheme",
+    "name": "ADIP Scheme – Assistive Devices for PwD",
+    "category": "other",
+    "description": "The Assistance to Disabled Persons (ADIP) Scheme provides free or subsidised assistive devices to PwDs to promote physical, social and psychological rehabilitation.",
     "benefits": [
-      "Free or subsidized assistive devices (wheelchairs, hearing aids, crutches, Braille kits, etc.)",
-      "Devices provided through camps organized by NGOs/government hospitals",
-      "Battery-operated wheelchairs for persons with severe locomotor disability",
+      "Free or subsidised wheelchairs, hearing aids, crutches, white canes, Braille kits",
+      "Battery-operated wheelchairs for severe locomotor disabilities",
+      "Assistive devices provided through government hospitals and NGO camps",
       "Support for fitting of artificial limbs"
     ],
-    "required_documents": [
-      "UDID Card or disability certificate from a recognized medical authority",
-      "Aadhaar Card",
-      "Income certificate issued by competent authority",
-      "Proof of residence",
-      "Prescription for the required assistive device from a medical officer"
-    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Income Certificate", "Residence Proof", "Prescription for Required Device"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "income_certificate", "residence_proof"],
     "eligibility_rules": {
-      "max_income": 20000,
+      "max_income": 240000,
       "min_disability_percent": 40,
-      "allowed_disability_types": [
-        "locomotor",
-        "visual",
-        "hearing",
-        "speech",
-        "cerebral_palsy",
-        "multiple_disabilities"
-      ],
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","cerebral_palsy","multiple_disabilities"],
       "age_range": [0, 100]
-    }
+    },
+    "apply_url": "https://disabilityaffairs.gov.in/content/page/adip-scheme.php"
   },
   {
-    "id": "scheme_003",
+    "id": "pre_matric_scholarship",
     "name": "Pre-Matric Scholarship for Students with Disabilities",
-    "description": "A scholarship scheme by the Department of Empowerment of Persons with Disabilities (DEPwD) to support students with disabilities studying in Classes 9 and 10. It aims to reduce the dropout rate among students with disabilities and encourage continuation of education.",
+    "category": "education",
+    "description": "Scholarship for students with disabilities studying in Classes 9 and 10 to reduce dropout and encourage continuation of education. Administered by DEPwD.",
     "benefits": [
-      "Scholarship of ₹700/month for day scholars and ₹1100/month for hostellers",
-      "Additional book grant of ₹1000 per annum",
-      "Ad-hoc grant of ₹2000 per annum for incidental expenses",
-      "Assistance with examination fee reimbursement"
+      "₹700/month for day scholars, ₹1,100/month for hostellers",
+      "Annual book grant of ₹1,000",
+      "Ad-hoc grant of ₹2,000 per annum for incidentals",
+      "Examination fee reimbursement"
     ],
-    "required_documents": [
-      "Disability certificate with minimum 40% disability",
-      "Income certificate of parent/guardian (annual income not exceeding ₹2.5 lakh)",
-      "Aadhaar Card of student and parent",
-      "School enrollment certificate",
-      "Bank account details (in student's name or joint with parent)",
-      "Previous year's mark sheet"
-    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Income Certificate", "Bonafide Certificate", "Student ID Card", "Previous Marksheet", "Bank Account Details"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "income_certificate", "bonafide_certificate", "student_id", "previous_marksheet", "bank_account"],
     "eligibility_rules": {
       "max_income": 250000,
       "min_disability_percent": 40,
-      "allowed_disability_types": [
-        "locomotor",
-        "visual",
-        "hearing",
-        "speech",
-        "intellectual",
-        "autism",
-        "cerebral_palsy",
-        "specific_learning_disability",
-        "multiple_disabilities"
-      ],
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","intellectual","autism","cerebral_palsy","specific_learning_disability","multiple_disabilities"],
       "age_range": [14, 19]
-    }
+    },
+    "apply_url": "https://scholarships.gov.in/"
   },
   {
-    "id": "scheme_004",
+    "id": "niramaya",
     "name": "Niramaya Health Insurance Scheme",
-    "description": "Niramaya is a health insurance scheme specifically designed for persons with Autism, Cerebral Palsy, Mental Retardation, and Multiple Disabilities. It is implemented by the National Trust under the Ministry of Social Justice and Empowerment in collaboration with insurance companies to provide health coverage to persons with these specific disabilities.",
+    "category": "health",
+    "description": "Health insurance scheme for persons with Autism, Cerebral Palsy, Mental Retardation, and Multiple Disabilities, implemented by the National Trust under the Ministry of Social Justice.",
     "benefits": [
       "Health insurance cover up to ₹1 lakh per annum",
       "OPD coverage up to ₹15,000 per year",
-      "Annual premium of only ₹500 (BPL families: ₹250)",
-      "Coverage for hospitalization, surgeries, and alternative therapies (Ayurveda, Yoga, etc.)",
-      "Coverage for transportation charges for medical visits"
+      "Annual premium of only ₹500 (₹250 for BPL families)",
+      "Coverage for hospitalization, surgeries, and alternative therapies",
+      "Transportation charges for medical visits covered"
     ],
-    "required_documents": [
-      "Disability certificate from a recognized medical board",
-      "Aadhaar Card of the beneficiary",
-      "BPL card (if applicable) for concessional premium",
-      "Proof of residence",
-      "Photograph of the applicant",
-      "Guardian's ID proof (if beneficiary is a minor or dependent)"
-    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Passport Size Photo", "Residence Proof"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "passport_photo", "residence_proof"],
     "eligibility_rules": {
       "max_income": null,
       "min_disability_percent": 35,
-      "allowed_disability_types": [
-        "autism",
-        "cerebral_palsy",
-        "intellectual",
-        "multiple_disabilities"
-      ],
+      "allowed_disability_types": ["autism","cerebral_palsy","intellectual","multiple_disabilities"],
       "age_range": [0, 100]
-    }
+    },
+    "apply_url": "https://thenationaltrust.gov.in/content/scheme/niramaya.php"
   },
   {
-    "id": "scheme_005",
+    "id": "national_fellowship",
     "name": "National Fellowship for Persons with Disabilities",
-    "description": "The National Fellowship for Persons with Disabilities (NFPwD), administered by the University Grants Commission (UGC) and funded by DEPwD, provides financial assistance to PwD students pursuing higher education (M.Phil. & Ph.D.). It aims to increase research opportunities and promote inclusion in academia.",
+    "category": "education",
+    "description": "UGC-administered fellowship funded by DEPwD providing financial assistance to PwD students pursuing M.Phil & Ph.D to increase research opportunities and promote inclusion in academia.",
     "benefits": [
-      "Junior Research Fellowship (JRF) of ₹31,000/month for the first two years",
-      "Senior Research Fellowship (SRF) of ₹35,000/month for the remaining tenure",
+      "JRF: ₹31,000/month for first two years",
+      "SRF: ₹35,000/month for remaining tenure",
       "HRA as per university norms",
-      "Annual contingency grant of ₹10,000 (JRF) and ₹20,500 (SRF)",
-      "200 slots available per year across all disciplines"
+      "Annual contingency grant ₹10,000 (JRF) / ₹20,500 (SRF)",
+      "200 fellowship slots available per year"
     ],
-    "required_documents": [
-      "Disability certificate with minimum 40% benchmark disability",
-      "UDID Card (preferred)",
-      "Proof of admission to M.Phil./Ph.D. program",
-      "Statement of Purpose / Research proposal",
-      "Academic mark sheets (graduation and post-graduation)",
-      "Aadhaar Card",
-      "Bank account details"
-    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Educational Certificates", "Bank Account Details"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "educational_certificates", "bank_account"],
     "eligibility_rules": {
       "max_income": null,
       "min_disability_percent": 40,
-      "allowed_disability_types": [
-        "locomotor",
-        "visual",
-        "hearing",
-        "speech",
-        "intellectual",
-        "mental_illness",
-        "autism",
-        "cerebral_palsy",
-        "multiple_disabilities",
-        "specific_learning_disability"
-      ],
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","intellectual","mental_illness","autism","cerebral_palsy","multiple_disabilities","specific_learning_disability"],
       "age_range": [18, 35]
-    }
+    },
+    "apply_url": "https://www.ugc.gov.in/fellowship"
+  },
+  {
+    "id": "post_matric_scholarship",
+    "name": "Post-Matric Scholarship for Students with Disabilities",
+    "category": "education",
+    "description": "Financial assistance for students with disabilities pursuing post-matriculation studies (Class 11 onwards up to Ph.D). Covers tuition, maintenance, and other allowances.",
+    "benefits": [
+      "Maintenance allowance ranging from ₹1,200 to ₹1,700/month",
+      "Full reimbursement of compulsory non-refundable fees",
+      "Study tour charges up to ₹1,600 per annum",
+      "Book allowance up to ₹1,200 per annum",
+      "Thesis typing & printing charges"
+    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Income Certificate", "Bonafide Certificate", "Student ID Card", "Previous Marksheet", "Bank Account Details"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "income_certificate", "bonafide_certificate", "student_id", "previous_marksheet", "bank_account"],
+    "eligibility_rules": {
+      "max_income": 250000,
+      "min_disability_percent": 40,
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","intellectual","autism","cerebral_palsy","specific_learning_disability","multiple_disabilities"],
+      "age_range": [15, 40]
+    },
+    "apply_url": "https://scholarships.gov.in/"
+  },
+  {
+    "id": "pm_awas_pwd",
+    "name": "PM Awas Yojana – Priority for PwD",
+    "category": "housing",
+    "description": "Under Pradhan Mantri Awas Yojana (Gramin & Urban), Persons with Disabilities are given priority allotment of houses with ground-floor preference and disability-friendly construction features.",
+    "benefits": [
+      "Priority allotment of housing units",
+      "Ground floor preference for PwD beneficiaries",
+      "Disability-friendly ramp and accessible toilet construction",
+      "Financial assistance up to ₹1.20 lakh in plains, ₹1.30 lakh in hilly areas",
+      "Free of cost under BPL category"
+    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Income Certificate", "Bank Account Details", "Residence Proof"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "income_certificate", "bank_account", "residence_proof"],
+    "eligibility_rules": {
+      "max_income": 300000,
+      "min_disability_percent": 40,
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","intellectual","mental_illness","autism","cerebral_palsy","multiple_disabilities"],
+      "age_range": [18, 80]
+    },
+    "apply_url": "https://pmayg.nic.in/"
+  },
+  {
+    "id": "igndps",
+    "name": "Indira Gandhi National Disability Pension (IGNDPS)",
+    "category": "financial",
+    "description": "A centrally-sponsored social pension scheme under the National Social Assistance Programme for Below Poverty Line (BPL) persons with severe or multiple disabilities aged 18–79 years.",
+    "benefits": [
+      "Monthly pension of ₹300 (central share) per beneficiary",
+      "States may add their own contribution (varies by state)",
+      "Direct Benefit Transfer to bank account",
+      "No repayment required — lifelong benefit"
+    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Income Certificate", "Residence Proof", "Bank Account Details", "BPL Card"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "income_certificate", "residence_proof", "bank_account", "bpl_card"],
+    "eligibility_rules": {
+      "max_income": 60000,
+      "min_disability_percent": 80,
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","intellectual","mental_illness","autism","cerebral_palsy","multiple_disabilities"],
+      "age_range": [18, 79]
+    },
+    "apply_url": "https://nsap.nic.in/"
+  },
+  {
+    "id": "nhfdc_loan",
+    "name": "NHFDC Concessional Loans for PwD",
+    "category": "employment",
+    "description": "The National Handicapped Finance & Development Corporation offers concessional loans for self-employment, education, and skill development to PwDs through State Channelising Agencies.",
+    "benefits": [
+      "Loans up to ₹30 lakh for self-employment",
+      "Educational loans up to ₹10 lakh",
+      "Interest rates as low as 5% per annum (vs 12-18% commercial rates)",
+      "Repayment period up to 7 years",
+      "Loans through State Channelising Agencies (SCAs)"
+    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Resume / CV", "Educational Certificates", "Bank Account Details"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "resume", "educational_certificates", "bank_account"],
+    "eligibility_rules": {
+      "max_income": 300000,
+      "min_disability_percent": 40,
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","intellectual","mental_illness","autism","cerebral_palsy","multiple_disabilities","specific_learning_disability"],
+      "age_range": [18, 55]
+    },
+    "apply_url": "https://www.nhfdc.nic.in/"
+  },
+  {
+    "id": "top_class_education",
+    "name": "Scholarship for Top Class Education – PwD",
+    "category": "education",
+    "description": "Full scholarship for PwD students admitted to prestigious institutions (IITs, IIMs, NLUs, NITs, AIIMS, etc.) for higher education. Covers tuition fees, living expenses, and more.",
+    "benefits": [
+      "Full tuition fee reimbursement",
+      "Monthly maintenance allowance of ₹3,000",
+      "Book allowance of ₹3,000 per annum",
+      "Computer allowance of ₹45,000 (one-time)",
+      "Study tour / thesis reimbursement"
+    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Income Certificate", "Bonafide Certificate", "Previous Marksheet", "Bank Account Details"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "income_certificate", "bonafide_certificate", "previous_marksheet", "bank_account"],
+    "eligibility_rules": {
+      "max_income": 800000,
+      "min_disability_percent": 40,
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","intellectual","autism","cerebral_palsy","specific_learning_disability","multiple_disabilities"],
+      "age_range": [17, 35]
+    },
+    "apply_url": "https://scholarships.gov.in/"
+  },
+  {
+    "id": "ddrs",
+    "name": "Deendayal Disabled Rehabilitation Scheme (DDRS)",
+    "category": "employment",
+    "description": "The DDRS provides grants to NGOs/VOs to run projects for education, training, and rehabilitation of PwDs including vocational training centres, special schools, and self-employment programmes.",
+    "benefits": [
+      "Access to free vocational training centres",
+      "Skill development in IT, tailoring, handicrafts, and more",
+      "Career counseling and placement support",
+      "Educational support for students with disabilities",
+      "Rehabilitation services through empanelled agencies"
+    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Income Certificate", "Residence Proof"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "income_certificate", "residence_proof"],
+    "eligibility_rules": {
+      "max_income": 250000,
+      "min_disability_percent": 40,
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","intellectual","autism","cerebral_palsy","specific_learning_disability","multiple_disabilities"],
+      "age_range": [5, 60]
+    },
+    "apply_url": "https://disabilityaffairs.gov.in/"
+  },
+  {
+    "id": "early_intervention",
+    "name": "National Trust Home-Based Early Intervention",
+    "category": "health",
+    "description": "The National Trust provides home-based early intervention services for children with autism, cerebral palsy, intellectual disabilities, and multiple disabilities from birth to 10 years.",
+    "benefits": [
+      "Home visits by trained therapists",
+      "Free physiotherapy, speech therapy, and occupational therapy",
+      "Parent / caregiver training",
+      "Access to respite care facilities",
+      "Networking with specialist agencies and doctors"
+    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Medical Reports", "Health Card"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "medical_reports", "health_card"],
+    "eligibility_rules": {
+      "max_income": null,
+      "min_disability_percent": 35,
+      "allowed_disability_types": ["autism","cerebral_palsy","intellectual","multiple_disabilities"],
+      "age_range": [0, 10]
+    },
+    "apply_url": "https://thenationaltrust.gov.in/"
+  },
+  {
+    "id": "railway_pass",
+    "name": "Free Railway Concession Pass for PwD",
+    "category": "other",
+    "description": "Indian Railways provides free travel concession to Persons with Disabilities and one escort. The concession is applicable on all classes of train travel across India.",
+    "benefits": [
+      "75% concession on rail fare for PwD",
+      "75% concession for one escort accompanying the PwD",
+      "Applicable on all train classes (Sleeper, AC, etc.)",
+      "Lower berth quota allotted priority",
+      "No income limit — available to all PwDs"
+    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Passport Size Photo"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "passport_photo"],
+    "eligibility_rules": {
+      "max_income": null,
+      "min_disability_percent": 40,
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","intellectual","mental_illness","autism","cerebral_palsy","multiple_disabilities"],
+      "age_range": [0, 100]
+    },
+    "apply_url": "https://www.indianrail.gov.in/concession.html"
+  },
+  {
+    "id": "state_disability_pension",
+    "name": "State Disability Pension Scheme",
+    "category": "financial",
+    "description": "State governments provide a monthly disability pension to PwDs who are below the poverty line and unable to earn livelihood due to disability. Varies by state but is available Pan-India.",
+    "benefits": [
+      "Monthly pension ranging from ₹400 to ₹1,500 depending on state",
+      "Direct Benefit Transfer to bank account",
+      "No repayment required",
+      "Renewable annually through simple self-declaration",
+      "Disability certificate as the primary eligibility proof"
+    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Income Certificate", "Residence Proof", "Bank Account Details"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "income_certificate", "residence_proof", "bank_account"],
+    "eligibility_rules": {
+      "max_income": 100000,
+      "min_disability_percent": 40,
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","intellectual","mental_illness","autism","cerebral_palsy","multiple_disabilities"],
+      "age_range": [18, 100]
+    },
+    "apply_url": "https://nsap.nic.in/"
+  },
+  {
+    "id": "nsti_skill_training",
+    "name": "Skill Development for PwD – NSTI / MSDE",
+    "category": "employment",
+    "description": "The Ministry of Skill Development & Entrepreneurship (MSDE) and National Skill Training Institutes (NSTI) offer free short-term and long-term skill courses exclusively for PwDs across India.",
+    "benefits": [
+      "Free vocational skill training in 100+ trades",
+      "Placement assistance after course completion",
+      "Stipend of ₹1,500/month during training",
+      "Certificate recognised by NCVT/SCVT",
+      "Hostel facility at NSTI campuses for outstation students"
+    ],
+    "required_documents": ["Disability Certificate", "Aadhaar Card", "Educational Certificates", "Bank Account Details"],
+    "required_documents_keys": ["disability_certificate", "aadhaar_card", "educational_certificates", "bank_account"],
+    "eligibility_rules": {
+      "max_income": 300000,
+      "min_disability_percent": 40,
+      "allowed_disability_types": ["locomotor","visual","hearing","speech","intellectual","autism","cerebral_palsy","multiple_disabilities"],
+      "age_range": [15, 40]
+    },
+    "apply_url": "https://www.msde.gov.in/"
   }
 ]

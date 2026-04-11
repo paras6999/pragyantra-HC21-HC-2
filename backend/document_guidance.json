@@ -1,0 +1,236 @@
+{
+  "passport_photo": {
+    "name": "Passport Size Photo",
+    "icon": "📷",
+    "where_to_get": "Any photo studio (Passport Photo shop)",
+    "steps": [
+      "Visit any nearby photo studio or browsing centre",
+      "Ask for 'passport size' colour photos on white background",
+      "Get 6–10 copies printed (₹30–60 total)",
+      "Keep digital copy on your phone as backup"
+    ],
+    "estimated_days": "Same day (30 minutes)",
+    "cost": "₹30–60 for 6 photos",
+    "documents_to_bring": [],
+    "unlock_schemes": ["UDID Card", "Niramaya Health Insurance", "Railway Concession Pass"]
+  },
+  "bank_account": {
+    "name": "Bank Account",
+    "icon": "🏦",
+    "where_to_get": "Any Nationalised Bank, Post Office, or Jan Dhan branch",
+    "steps": [
+      "Visit nearest bank branch or post office",
+      "Request to open a 'Basic Savings Bank Deposit Account' (BSBD / Jan Dhan) – free of cost",
+      "Submit Aadhaar Card as KYC proof",
+      "Submit one passport-size photo",
+      "Collect your passbook on the same day or within 3 days"
+    ],
+    "estimated_days": "1–3 working days",
+    "cost": "Free (Jan Dhan / BSBD account)",
+    "documents_to_bring": ["Aadhaar Card", "Passport Size Photo"],
+    "unlock_schemes": ["All scholarship schemes", "IGNDPS Pension", "PM Awas Yojana", "NHFDC Loan", "NSTI Skill Training"]
+  },
+  "disability_certificate": {
+    "name": "Disability Certificate",
+    "icon": "📋",
+    "where_to_get": "Government Civil Hospital / District Medical Board",
+    "steps": [
+      "Visit the nearest government civil hospital",
+      "Request a referral to the District Medical Board (DMB)",
+      "Undergo medical examination by a panel of doctors at the DMB",
+      "Submit Aadhaar card, residence proof, and 2 passport-size photos",
+      "Collect the certificate after 7–15 working days (may be issued same-day at some hospitals)"
+    ],
+    "estimated_days": "7–15 working days",
+    "cost": "Free at government hospitals",
+    "documents_to_bring": ["Aadhaar Card", "Passport Size Photos (2)", "Any existing medical reports"],
+    "unlock_schemes": ["All 15 schemes require this document"]
+  },
+  "aadhaar_card": {
+    "name": "Aadhaar Card",
+    "icon": "🪪",
+    "where_to_get": "Aadhaar Enrolment Centre (Common Service Centre / Post Office / Bank)",
+    "steps": [
+      "Locate nearest Aadhaar centre via uidai.gov.in or mAadhaar app",
+      "Carry original documents: birth certificate / passport / ration card for age proof, and any address proof",
+      "Biometric capture (fingerprints + iris scan) done at centre",
+      "Collect acknowledgement slip with Enrolment ID",
+      "Download e-Aadhaar from myaadhaar.uidai.gov.in in 5–7 days"
+    ],
+    "estimated_days": "5–10 working days",
+    "cost": "Free for new enrolment; ₹50 for updates",
+    "documents_to_bring": ["Date of Birth Proof (Birth Certificate / Passport)", "Address Proof (Ration Card / Utility Bill)"],
+    "unlock_schemes": ["Required for all 15 schemes"]
+  },
+  "income_certificate": {
+    "name": "Income Certificate",
+    "icon": "📄",
+    "where_to_get": "Tehsildar / Mamlatdar Office or online on state government portal",
+    "steps": [
+      "Visit your nearest Tehsildar (Revenue) office",
+      "Fill Form for Income Certificate (available free at office)",
+      "Attached required documents (Aadhaar, self-declaration of income, bank statement or salary slip)",
+      "Submit form at the counter and take acknowledgement slip",
+      "Collect certificate in 3–7 working days or download from state portal"
+    ],
+    "estimated_days": "3–7 working days",
+    "cost": "₹10–50 stamp duty (varies by state)",
+    "documents_to_bring": ["Aadhaar Card", "Recent bank passbook copy", "Salary slip or agricultural income proof"],
+    "unlock_schemes": ["ADIP Scheme", "Pre-Matric Scholarship", "Post-Matric Scholarship", "PM Awas Yojana", "IGNDPS Pension", "DDRS", "State Disability Pension"]
+  },
+  "residence_proof": {
+    "name": "Residence Proof",
+    "icon": "🏡",
+    "where_to_get": "Any document that proves where you currently live",
+    "steps": [
+      "Collect any ONE of: Ration Card, Voter ID, Utility Bill (electricity/water/gas), Aadhaar Card (if address is updated), Bank passbook with address",
+      "Ensure the document shows your CURRENT residential address",
+      "If address is not updated on Aadhaar, get Aadhaar address update or use another document",
+      "Self-attested photocopy is accepted in most applications"
+    ],
+    "estimated_days": "Immediate if document is already available",
+    "cost": "Free (use existing documents)",
+    "documents_to_bring": [],
+    "unlock_schemes": ["UDID Card", "ADIP Scheme", "Niramaya", "PM Awas Yojana", "IGNDPS Pension", "DDRS", "State Disability Pension"]
+  },
+  "bonafide_certificate": {
+    "name": "Bonafide Certificate",
+    "icon": "🏫",
+    "where_to_get": "Your School / College / University",
+    "steps": [
+      "Visit the administrative office of your school or college",
+      "Request a Bonafide Certificate from the Principal or Dean",
+      "Fill in the prescribed application form (if any)",
+      "Collect the certificate within 1–3 working days",
+      "Ensure it has the institution seal and authorised signature"
+    ],
+    "estimated_days": "1–3 working days",
+    "cost": "Free at most institutions (sometimes ₹20–50)",
+    "documents_to_bring": ["Student ID Card", "Fee receipt or admission letter"],
+    "unlock_schemes": ["Pre-Matric Scholarship", "Post-Matric Scholarship", "Top Class Education Scholarship"]
+  },
+  "student_id": {
+    "name": "Student ID Card",
+    "icon": "🎒",
+    "where_to_get": "Your School / College / University Administrative Office",
+    "steps": [
+      "Visit your institution's administrative office",
+      "Request student ID card if not already issued",
+      "Submit passport-size photo and enrolment number",
+      "Collect ID card within 1–5 working days"
+    ],
+    "estimated_days": "1–5 working days",
+    "cost": "Free or nominal fee (₹20–100)",
+    "documents_to_bring": ["Admission Form", "Passport Size Photo"],
+    "unlock_schemes": ["Pre-Matric Scholarship", "Post-Matric Scholarship"]
+  },
+  "previous_marksheet": {
+    "name": "Previous Year Marksheet",
+    "icon": "📝",
+    "where_to_get": "Your School / College or Examination Board",
+    "steps": [
+      "Collect your original marksheet from school/college records",
+      "If lost, apply for a duplicate at the examination board office",
+      "Bring admit card number and roll number for duplicate request",
+      "Download digital marksheet from DigiLocker (digilocker.gov.in) for many boards"
+    ],
+    "estimated_days": "Immediate if original available; 7–15 days for duplicate",
+    "cost": "Free; ₹200–500 for duplicate certificates",
+    "documents_to_bring": ["Aadhaar Card", "Previous admit card or roll number"],
+    "unlock_schemes": ["Pre-Matric Scholarship", "Post-Matric Scholarship", "Top Class Education Scholarship"]
+  },
+  "resume": {
+    "name": "Resume / CV",
+    "icon": "📑",
+    "where_to_get": "Self-prepared document",
+    "steps": [
+      "Create a resume with your name, age, educational qualifications, skills, and work experience",
+      "Include contact details and Aadhaar number",
+      "Get it typed at any internet cafe (₹15–30) if needed",
+      "Use free tools: Canva, Google Docs, or Microsoft Word templates",
+      "Get 4–6 photocopies made for multiple applications"
+    ],
+    "estimated_days": "Same day",
+    "cost": "₹15–50 (typing + printing)",
+    "documents_to_bring": [],
+    "unlock_schemes": ["NHFDC Concessional Loan"]
+  },
+  "educational_certificates": {
+    "name": "Educational Certificates",
+    "icon": "🎓",
+    "where_to_get": "Your Previous Schools / Colleges or Examination Board",
+    "steps": [
+      "Gather mark sheets and degree/diploma certificates from all previous educational institutions",
+      "Download digital copies from DigiLocker (digilocker.gov.in) – free",
+      "For missing or lost originals, contact the examination board for certified duplicates",
+      "Get self-attested photocopies made for each application"
+    ],
+    "estimated_days": "Immediate from DigiLocker; 7–30 days for physical certificates",
+    "cost": "Free on DigiLocker; ₹200–1,000 for duplicates",
+    "documents_to_bring": ["Aadhaar Card", "Enrolment / Roll Number"],
+    "unlock_schemes": ["National Fellowship for PwD", "NHFDC Loan", "NSTI Skill Training"]
+  },
+  "employment_exchange_reg": {
+    "name": "Employment Exchange Registration",
+    "icon": "🏢",
+    "where_to_get": "District Employment Exchange Office",
+    "steps": [
+      "Visit the nearest Employment Exchange office (find via your state government website)",
+      "Fill registration form (Form A) available at the counter",
+      "Submit Aadhaar, educational certificates, and passport-size photo",
+      "Collect registration card on the same day or in 1–2 days",
+      "Renew registration annually to keep it active"
+    ],
+    "estimated_days": "1–2 working days",
+    "cost": "Free",
+    "documents_to_bring": ["Aadhaar Card", "Educational Certificates", "Passport Size Photo"],
+    "unlock_schemes": ["Employment schemes requiring Exchange registration"]
+  },
+  "health_card": {
+    "name": "Health Card / Ayushman Card",
+    "icon": "💳",
+    "where_to_get": "Common Service Centre (CSC) or nearest Empanelled Hospital",
+    "steps": [
+      "Check eligibility on pmjay.gov.in or the MERA PMJAY app",
+      "Visit nearest Common Service Centre (CSC) or empanelled hospital",
+      "Bring Aadhaar Card and ration card",
+      "Get biometric verification done",
+      "Ayushman card downloaded or issued on spot"
+    ],
+    "estimated_days": "Same day – 3 days",
+    "cost": "Free",
+    "documents_to_bring": ["Aadhaar Card", "Ration Card"],
+    "unlock_schemes": ["National Trust Early Intervention"]
+  },
+  "medical_reports": {
+    "name": "Medical Reports / Prescriptions",
+    "icon": "🩺",
+    "where_to_get": "Government Hospital / Treating Doctor",
+    "steps": [
+      "Visit the doctor who is currently treating your disability",
+      "Request a summary of medical diagnosis, ongoing treatment, and medication",
+      "At government hospital: ask for OPD prescription and any blood test / imaging reports",
+      "Keep originals and make 4–5 photocopies for different applications"
+    ],
+    "estimated_days": "1–3 working days",
+    "cost": "Free at government OPD",
+    "documents_to_bring": ["Aadhaar Card", "Previous medical history if any"],
+    "unlock_schemes": ["National Trust Early Intervention"]
+  },
+  "bpl_card": {
+    "name": "BPL Card (Below Poverty Line Ration Card)",
+    "icon": "🪪",
+    "where_to_get": "Gram Panchayat Office or District Supply Office",
+    "steps": [
+      "Contact the Gram Panchayat or nearest Ration / Supply office",
+      "Fill the BPL Survey form and submit with Aadhaar and income certificate",
+      "Village officer / social worker may visit for verification",
+      "BPL card issued within 15–30 days after verification",
+      "Alternative: obtain income certificate showing annual income < ₹1 lakh as proxy"
+    ],
+    "estimated_days": "15–30 working days",
+    "cost": "Free",
+    "documents_to_bring": ["Aadhaar Card", "Income Certificate", "Residence Proof", "Passport Size Photo"],
+    "unlock_schemes": ["IGNDPS Pension (BPL mandatory)", "Niramaya (reduced premium)"]
+  }
+}
