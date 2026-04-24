@@ -18,9 +18,9 @@ GOOGLE_MAPS_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
 
 # gemini-2.5-flash confirmed working for this API key
 GEMINI_ENDPOINTS = [
-    "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={key}",
-    "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key={key}",
-    "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-lite:generateContent?key={key}",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={key}",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key={key}",
 ]
 
 if GEMINI_API_KEY:
@@ -112,7 +112,7 @@ def call_gemini_rest(user_message, history):
     for endpoint_template in GEMINI_ENDPOINTS:
         url = endpoint_template.format(key=GEMINI_API_KEY)
         try:
-            resp = requests.post(url, json=payload, timeout=20)
+            resp = requests.post(url, json=payload, timeout=5)
             data = resp.json()
 
             if resp.status_code == 200:
