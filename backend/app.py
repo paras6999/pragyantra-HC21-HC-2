@@ -6,7 +6,10 @@ import requests
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
+import sys
+
 BASE = os.path.dirname(__file__)
+sys.path.insert(0, BASE)
 load_dotenv(os.path.join(BASE, '.env'))
 
 # ── API Keys ──────────────────────────────────────────────────────────────────
