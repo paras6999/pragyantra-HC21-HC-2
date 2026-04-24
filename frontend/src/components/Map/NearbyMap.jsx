@@ -30,6 +30,7 @@ export default function NearbyMap({ docType = 'government_office' }) {
 
     return () => {
       if (mapInstance.current) {
+        mapInstance.current.off()
         mapInstance.current.remove()
         mapInstance.current = null
       }
@@ -50,14 +51,24 @@ export default function NearbyMap({ docType = 'government_office' }) {
     }
   }
 
+  // Handle Map Rendering
   useEffect(() => {
-    if (status === 'ready' && userLocation && window.L && mapRef.current && !mapInstance.current) {
-      mapInstance.current = window.L.map(mapRef.current).setView([userLocation.lat, userLocation.lng], 13)
+    if (status === 'ready' && userLocation && window.L && mapRef.current) {
+      
+      // Cleanup previous instance before recreating to avoid duplicate init error
+      if (mapInstance.current) {
+        mapInstance.current.off()
+        mapInstance.current.remove()
+        mapInstance.current = null
+      }
+
+      const map = window.L.map(mapRef.current).setView([userLocation.lat, userLocation.lng], 13)
+      mapInstance.current = map
 
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
-      }).addTo(mapInstance.current)
+      }).addTo(map)
 
       // User Marker
       const userIcon = window.L.icon({
@@ -70,22 +81,22 @@ export default function NearbyMap({ docType = 'government_office' }) {
       })
 
       window.L.marker([userLocation.lat, userLocation.lng], { icon: userIcon })
-        .addTo(mapInstance.current)
+        .addTo(map)
         .bindPopup('<b>You are here</b>')
         .openPopup()
 
       // Center Markers
       centers.forEach(c => {
         if (c.lat && c.lng) {
-          const marker = window.L.marker([c.lat, c.lng]).addTo(mapInstance.current)
+          const marker = window.L.marker([c.lat, c.lng]).addTo(map)
           
           const popupContent = `
-            <div class="text-gray-800 p-2">
+            <div class="text-[#1A2332] p-1 font-sans">
               <h3 class="font-bold text-sm mb-1">${c.name}</h3>
-              <p class="text-xs mb-2">${c.address}</p>
+              <p class="text-xs mb-2 text-[#5C6B7A]">${c.address}</p>
               <a href="https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lng}" 
                  target="_blank" 
-                 class="inline-block px-3 py-1 bg-purple-600 text-white rounded text-xs font-semibold hover:bg-purple-700 transition">
+                 class="inline-block px-3 py-1.5 bg-[#1a3569] text-white rounded text-xs font-semibold hover:bg-[#0d1f3c] transition">
                 Open in Google Maps →
               </a>
             </div>
@@ -97,25 +108,36 @@ export default function NearbyMap({ docType = 'government_office' }) {
   }, [status, centers, userLocation])
 
   return (
-    <div className="w-full rounded-2xl overflow-hidden glass border border-white/10 relative" style={{ height: '300px' }}>
+    <div className="w-full h-full min-h-[300px] bg-gray-50 relative">
       {status !== 'ready' && (
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/50 text-white p-4 text-center">
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/90 text-[#1a3569] p-4 text-center">
            {status === 'locating' && (
             <>
-              <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-2 mx-auto" />
-              <p className="text-sm text-white/70">📍 Locating you...</p>
+              <div className="w-8 h-8 border-4 border-[#1a3569] border-t-transparent rounded-full animate-spin mb-3 mx-auto" />
+              <p className="text-sm font-semibold text-[#1a3569]">📍 Locating you (Please allow access)...</p>
             </>
           )}
           {status === 'loading' && (
             <>
-              <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-2 mx-auto" />
-              <p className="text-sm text-white/70">🔄 Finding nearby centers...</p>
+              <div className="w-8 h-8 border-4 border-[#FF6600] border-t-transparent rounded-full animate-spin mb-3 mx-auto" />
+              <p className="text-sm font-semibold text-[#1A2332]">🔄 Finding nearby centers...</p>
             </>
           )}
-          {status === 'error' && <p className="text-red-400">⚠️ {errorMsg}</p>}
+          {status === 'error' && (
+            <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+              <p className="text-red-700 font-semibold mb-1">⚠️ Error</p>
+              <p className="text-red-600 text-sm max-w-xs mx-auto">{errorMsg}</p>
+              <button 
+                onClick={() => setStatus('locating')} 
+                className="mt-3 px-4 py-1.5 bg-red-100 hover:bg-red-200 text-red-800 rounded text-xs font-bold transition"
+              >
+                Retry Location
+              </button>
+            </div>
+          )}
         </div>
       )}
-      <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
+      <div ref={mapRef} style={{ width: '100%', height: '100%', minHeight: '300px', backgroundColor: '#f3f4f6' }} />
     </div>
   )
 }

@@ -17,12 +17,13 @@ export default function Step3_Disability({ onNext, onBack }) {
   }
 
   return (
-    <div className="step-enter space-y-6">
+    <div className="step-enter space-y-5">
+
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between pb-3 border-b border-gov-border">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-white">{t('step3_title')}</h2>
-          <p className="text-white/50 mt-1 text-sm">{t('step3_subtitle')}</p>
+          <h2 className="text-xl md:text-2xl font-bold text-[#1a3569]">{t('step3_title')}</h2>
+          <p className="text-[#5C6B7A] mt-0.5 text-sm">{t('step3_subtitle')}</p>
         </div>
         <VoiceButton onResult={handleVoice} compact />
       </div>
@@ -38,10 +39,11 @@ export default function Step3_Disability({ onNext, onBack }) {
 
       {/* Conditional: disability % */}
       {formData.has_disability_cert && (
-        <div className="animate-slide-in-up space-y-3">
-          <label className="block text-white/70 text-sm font-medium">
-            {t('disability_percent_label')} <span className="text-purple-400">*</span>
+        <div className="animate-slide-in-up space-y-4 p-4 rounded-lg bg-[#F5F7FA] border border-gov-border">
+          <label className="block text-[#1a3569] text-xs font-semibold uppercase tracking-wide">
+            {t('disability_percent_label')} <span className="text-[#FF6600]">*</span>
           </label>
+          <p className="text-[#5C6B7A] text-xs -mt-2">{t('disability_percent_desc')}</p>
 
           {/* Slider */}
           <div className="space-y-2">
@@ -49,12 +51,13 @@ export default function Step3_Disability({ onNext, onBack }) {
               type="range" min="1" max="100"
               value={pct}
               onChange={e => updateFormData({ disability_percent: e.target.value })}
-              className="w-full accent-purple-500 cursor-pointer"
+              className="w-full cursor-pointer"
+              style={{ accentColor: pct >= 40 ? '#138808' : pct >= 35 ? '#FF6600' : '#dc2626' }}
               aria-label={t('disability_percent_label')}
             />
-            <div className="flex justify-between text-xs text-white/30">
+            <div className="flex justify-between text-xs text-[#5C6B7A]">
               <span>1%</span>
-              <span className={`font-bold text-base ${pct >= 40 ? 'text-green-400' : 'text-amber-400'}`}>
+              <span className={`font-black text-lg ${pct >= 40 ? 'text-[#138808]' : pct >= 35 ? 'text-[#FF6600]' : 'text-red-600'}`}>
                 {pct}%
               </span>
               <span>100%</span>
@@ -63,33 +66,33 @@ export default function Step3_Disability({ onNext, onBack }) {
 
           {/* Or type directly */}
           <div className="flex items-center gap-3">
-            <span className="text-white/40 text-xs">Or type:</span>
+            <span className="text-[#5C6B7A] text-xs">Or type:</span>
             <input
               type="number" min="1" max="100"
               value={pct}
               onChange={e => updateFormData({ disability_percent: Math.min(100, Math.max(0, Number(e.target.value))) })}
-              className="w-24 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm text-center focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-24 gov-input py-2 text-center font-bold text-[#1a3569]"
             />
-            <span className="text-white/40 text-sm">%</span>
+            <span className="text-[#5C6B7A] text-sm font-bold">%</span>
           </div>
 
           {/* Warnings */}
           {pct > 0 && pct < 35 && (
-            <div className="flex items-start gap-2 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20">
+            <div className="flex items-start gap-2 px-4 py-3 rounded-lg bg-red-50 border border-red-200">
               <span>⚠️</span>
-              <p className="text-red-300 text-sm">Disability below 35% makes all schemes ineligible. Please recheck your certificate.</p>
+              <p className="text-red-700 text-sm">Disability below 35% makes all schemes ineligible. Please recheck your certificate.</p>
             </div>
           )}
           {pct >= 35 && pct < 40 && (
-            <div className="flex items-start gap-2 px-4 py-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
+            <div className="flex items-start gap-2 px-4 py-3 rounded-lg bg-orange-50 border border-orange-200">
               <span>⚠️</span>
-              <p className="text-amber-300 text-sm">{t('below_40_warning')}</p>
+              <p className="text-orange-700 text-sm">{t('below_40_warning')}</p>
             </div>
           )}
           {pct >= 40 && (
-            <div className="flex items-start gap-2 px-4 py-3 rounded-xl bg-green-500/10 border border-green-500/20">
+            <div className="flex items-start gap-2 px-4 py-3 rounded-lg bg-green-50 border border-green-200">
               <span>✅</span>
-              <p className="text-green-300 text-sm">Great! At {pct}% you qualify for the majority of PwD schemes.</p>
+              <p className="text-green-800 text-sm">At <strong>{pct}%</strong> you qualify for the majority of PwD government schemes.</p>
             </div>
           )}
         </div>
@@ -97,23 +100,21 @@ export default function Step3_Disability({ onNext, onBack }) {
 
       {/* No cert info */}
       {!formData.has_disability_cert && (
-        <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-amber-500/10 border border-amber-500/20 animate-slide-in-up">
+        <div className="flex items-start gap-3 px-4 py-3 rounded-lg bg-orange-50 border border-orange-200 animate-slide-in-up">
           <span className="text-xl">📋</span>
           <div>
-            <p className="text-amber-300 text-sm font-medium">Disability Certificate not available</p>
-            <p className="text-amber-200/60 text-xs mt-1">{t('no_cert_info')}</p>
+            <p className="text-orange-800 text-sm font-semibold">Disability Certificate not available</p>
+            <p className="text-orange-700 text-xs mt-1">{t('no_cert_info')}</p>
           </div>
         </div>
       )}
 
       {/* Navigation */}
-      <div className="flex gap-3 pt-2">
-        <button onClick={onBack}
-          className="flex-1 py-3.5 rounded-xl border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-medium transition-all">
+      <div className="flex gap-3 pt-4 border-t border-gov-border">
+        <button onClick={onBack} className="gov-btn-secondary flex-1 py-3 rounded-md text-sm">
           {t('back')}
         </button>
-        <button onClick={onNext}
-          className="flex-[2] py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold transition-all glow-purple">
+        <button onClick={onNext} className="gov-btn-primary flex-[2] py-3 rounded-md text-sm">
           {t('next')}
         </button>
       </div>

@@ -2,15 +2,32 @@ import { useState } from 'react'
 import { useApp } from '../../context/AppContext'
 import VoiceButton from '../Voice/VoiceButton'
 
+// Reusable styled input for government theme
+function GovInput({ label, required, error, children, hint }) {
+  return (
+    <div>
+      <label className="block text-[#1a3569] text-xs font-semibold mb-1.5 uppercase tracking-wide">
+        {label} {required && <span className="text-[#FF6600]">*</span>}
+      </label>
+      {children}
+      {hint  && <p className="text-[#5C6B7A] text-xs mt-1">{hint}</p>}
+      {error && <p className="text-red-600 text-xs mt-1 flex items-center gap-1">⚠ {error}</p>}
+    </div>
+  )
+}
+
+const inputClass = (error) =>
+  `gov-input ${error ? 'border-red-400 focus:border-red-500' : ''}`
+
 export default function Step1_BasicInfo({ onNext, onBack }) {
   const { formData, updateFormData, t } = useApp()
   const [errors, setErrors] = useState({})
 
   const validate = () => {
     const e = {}
-    if (!formData.firstName.trim()) e.firstName = 'First name is required'
+    if (!formData.firstName?.trim())                          e.firstName = 'First name is required'
     if (!formData.age || formData.age < 1 || formData.age > 120) e.age = 'Enter a valid age (1–120)'
-    if (!formData.income && formData.income !== 0) e.income = 'Enter annual income (0 if none)'
+    if (formData.income === '' || formData.income === undefined) e.income  = 'Enter annual income (0 if none)'
     return e
   }
 
@@ -21,18 +38,18 @@ export default function Step1_BasicInfo({ onNext, onBack }) {
   }
 
   const handleVoice = (transcript) => {
-    // Try to parse name and age from voice
     const ageMatch = transcript.match(/(\d+)\s*(year|sal|saal|वर्ष|years)?/)
     if (ageMatch) updateFormData({ age: ageMatch[1] })
   }
 
   return (
-    <div className="step-enter space-y-6">
+    <div className="step-enter space-y-5">
+
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between pb-3 border-b border-gov-border">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-white">{t('step1_title')}</h2>
-          <p className="text-white/50 mt-1 text-sm">{t('step1_subtitle')}</p>
+          <h2 className="text-xl md:text-2xl font-bold text-[#1a3569]">{t('step1_title')}</h2>
+          <p className="text-[#5C6B7A] mt-0.5 text-sm">{t('step1_subtitle')}</p>
         </div>
         <VoiceButton onResult={handleVoice} compact />
       </div>
@@ -44,74 +61,53 @@ export default function Step1_BasicInfo({ onNext, onBack }) {
           { key: 'middleName', label: t('middle_name'), required: false },
           { key: 'lastName',   label: t('last_name'),   required: false },
         ].map(({ key, label, required }) => (
-          <div key={key}>
-            <label className="block text-white/70 text-xs font-medium mb-1.5">
-              {label} {required && <span className="text-purple-400">*</span>}
-            </label>
+          <GovInput key={key} label={label} required={required} error={errors[key]}>
             <input
               type="text"
-              value={formData[key]}
-              onChange={e => { updateFormData({ [key]: e.target.value }); setErrors(prev => ({ ...prev, [key]: '' })) }}
+              value={formData[key] || ''}
+              onChange={e => { updateFormData({ [key]: e.target.value }); setErrors(p => ({ ...p, [key]: '' })) }}
               placeholder={label}
               aria-label={label}
-              className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-white/25 text-sm
-                focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all
-                ${errors[key] ? 'border-red-500' : 'border-white/10 hover:border-white/20'}`}
+              className={inputClass(errors[key])}
             />
-            {errors[key] && <p className="text-red-400 text-xs mt-1">{errors[key]}</p>}
-          </div>
+          </GovInput>
         ))}
       </div>
 
       {/* Age + Income */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-white/70 text-xs font-medium mb-1.5">
-            {t('age')} <span className="text-purple-400">*</span>
-          </label>
+        <GovInput label={t('age')} required error={errors.age}>
           <input
             type="number" min="1" max="120"
-            value={formData.age}
+            value={formData.age || ''}
             onChange={e => { updateFormData({ age: e.target.value }); setErrors(p => ({ ...p, age: '' })) }}
             placeholder="e.g. 24"
             aria-label={t('age')}
-            className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-white/25 text-sm
-              focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all
-              ${errors.age ? 'border-red-500' : 'border-white/10 hover:border-white/20'}`}
+            className={inputClass(errors.age)}
           />
-          {errors.age && <p className="text-red-400 text-xs mt-1">{errors.age}</p>}
-        </div>
+        </GovInput>
 
-        <div>
-          <label className="block text-white/70 text-xs font-medium mb-1.5">
-            {t('annual_income')} <span className="text-purple-400">*</span>
-          </label>
+        <GovInput label={t('annual_income')} required error={errors.income} hint="Enter 0 if unemployed or no income">
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 font-bold">₹</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5C6B7A] font-bold text-sm pointer-events-none">₹</span>
             <input
               type="number" min="0"
-              value={formData.income}
+              value={formData.income || ''}
               onChange={e => { updateFormData({ income: e.target.value }); setErrors(p => ({ ...p, income: '' })) }}
               placeholder="e.g. 150000"
               aria-label={t('annual_income')}
-              className={`w-full pl-8 pr-4 py-3 rounded-xl bg-white/5 border text-white placeholder-white/25 text-sm
-                focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all
-                ${errors.income ? 'border-red-500' : 'border-white/10 hover:border-white/20'}`}
+              className={`${inputClass(errors.income)} pl-7`}
             />
           </div>
-          {errors.income && <p className="text-red-400 text-xs mt-1">{errors.income}</p>}
-          <p className="text-white/30 text-xs mt-1">Enter 0 if unemployed or no income</p>
-        </div>
+        </GovInput>
       </div>
 
       {/* Navigation */}
-      <div className="flex gap-3 pt-2">
-        <button onClick={onBack}
-          className="flex-1 py-3.5 rounded-xl border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-medium transition-all">
+      <div className="flex gap-3 pt-4 border-t border-gov-border">
+        <button onClick={onBack} className="gov-btn-secondary flex-1 py-3 rounded-md text-sm">
           {t('back')}
         </button>
-        <button onClick={handleNext}
-          className="flex-[2] py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold transition-all glow-purple">
+        <button onClick={handleNext} className="gov-btn-primary flex-[2] py-3 rounded-md text-sm">
           {t('next')}
         </button>
       </div>

@@ -18,21 +18,22 @@ export default function Step2_GlobalDocs({ onNext, onBack }) {
   }
 
   return (
-    <div className="step-enter space-y-6">
+    <div className="step-enter space-y-5">
+
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between pb-3 border-b border-gov-border">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-white">{t('step2_title')}</h2>
-          <p className="text-white/50 mt-1 text-sm">{t('step2_subtitle')}</p>
+          <h2 className="text-xl md:text-2xl font-bold text-[#1a3569]">{t('step2_title')}</h2>
+          <p className="text-[#5C6B7A] mt-0.5 text-sm">{t('step2_subtitle')}</p>
         </div>
         <VoiceButton onResult={handleVoice} compact />
       </div>
 
       {/* Info banner */}
-      <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-sky-500/10 border border-sky-500/20">
+      <div className="flex items-start gap-3 px-4 py-3 rounded-lg bg-[#EEF2FF] border border-blue-200">
         <span className="text-xl">💡</span>
-        <p className="text-sky-300 text-sm">
-          These two documents are needed by almost every scheme. If you don't have them yet, we'll show you how to get them.
+        <p className="text-[#1a3569] text-sm leading-relaxed">
+          These two documents are needed by <strong>almost every scheme</strong>. If you don't have them yet, we'll show you how to get them after the results.
         </p>
       </div>
 
@@ -51,13 +52,11 @@ export default function Step2_GlobalDocs({ onNext, onBack }) {
       </div>
 
       {/* Navigation */}
-      <div className="flex gap-3 pt-2">
-        <button onClick={onBack}
-          className="flex-1 py-3.5 rounded-xl border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-medium transition-all">
+      <div className="flex gap-3 pt-4 border-t border-gov-border">
+        <button onClick={onBack} className="gov-btn-secondary flex-1 py-3 rounded-md text-sm">
           {t('back')}
         </button>
-        <button onClick={onNext}
-          className="flex-[2] py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold transition-all glow-purple">
+        <button onClick={onNext} className="gov-btn-primary flex-[2] py-3 rounded-md text-sm">
           {t('next')}
         </button>
       </div>

@@ -1,123 +1,151 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
-import SchemeCard             from '../components/Results/SchemeCard'
-import EligibilityScore       from '../components/Results/EligibilityScore'
-import DocumentGuidancePanel  from '../components/Guidance/DocumentGuidancePanel'
-import GreyZoneMapPanel       from '../components/Map/GreyZoneMapPanel'
-import LanguageSwitcher       from '../components/shared/LanguageSwitcher'
+import SchemeCard            from '../components/Results/SchemeCard'
+import EligibilityScore      from '../components/Results/EligibilityScore'
+import DocumentGuidancePanel from '../components/Guidance/DocumentGuidancePanel'
+import GreyZoneMapPanel      from '../components/Map/GreyZoneMapPanel'
+import LanguageSwitcher      from '../components/shared/LanguageSwitcher'
 
 const TABS = [
-  { key: 'all',          label: 'All',          icon: '🌐' },
-  { key: 'eligible',     label: 'Eligible',     icon: '✅' },
-  { key: 'grey_zone',    label: 'Grey Zone',    icon: '🟡' },
-  { key: 'not_eligible', label: 'Not Eligible', icon: '❌' },
+  { key: 'all',          label: 'All Schemes',  icon: '🌐', color: '#1a3569' },
+  { key: 'eligible',     label: 'Eligible',      icon: '✅', color: '#138808' },
+  { key: 'grey_zone',    label: 'Grey Zone',     icon: '🟡', color: '#b45309' },
+  { key: 'not_eligible', label: 'Not Eligible',  icon: '❌', color: '#dc2626' },
 ]
 
 export default function ResultsPage() {
   const navigate = useNavigate()
-  const { results, formData, resetWizard, t } = useApp()
-  const [activeTab,  setActiveTab]  = useState('all')
+  const { results, formData, resetWizard, t, screenReader, setScreenReader } = useApp()
+  const [activeTab,   setActiveTab]   = useState('all')
   const [guidanceDoc, setGuidanceDoc] = useState(null)
 
-  // Redirect if no results
   if (!results) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center" style={{ background: '#0a0a1a' }}>
-        <p className="text-white/50 text-lg mb-6">No results yet. Please complete the eligibility wizard first.</p>
-        <button onClick={() => navigate('/wizard')}
-          className="px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold transition-all">
-          Go to Wizard →
-        </button>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#F0F4F8]">
+        <div className="gov-card p-10 text-center max-w-md mx-auto">
+          <div className="text-5xl mb-4">📋</div>
+          <p className="text-[#1a3569] text-lg font-bold mb-2">No Results Yet</p>
+          <p className="text-[#5C6B7A] text-sm mb-6">Please complete the eligibility wizard first.</p>
+          <button onClick={() => navigate('/wizard')} className="gov-btn-primary px-8 py-3 rounded-md text-sm">
+            Go to Wizard →
+          </button>
+        </div>
       </div>
     )
   }
 
   const { eligible, grey_zone, not_eligible, total } = results
 
-  const allSchemes = [...eligible, ...grey_zone, ...not_eligible]
-
   const FILTERED = {
-    all:          allSchemes,
-    eligible:     eligible,
-    grey_zone:    grey_zone,
-    not_eligible: not_eligible,
+    all:          [...eligible, ...grey_zone, ...not_eligible],
+    eligible,
+    grey_zone,
+    not_eligible,
   }
-
-  const displayed = FILTERED[activeTab] || allSchemes
-
+  const displayed = FILTERED[activeTab] || FILTERED.all
   const displayedDocsMissing = Array.from(new Set(displayed.flatMap(s => s.missing_docs || [])))
-
-  const tabCount = (key) => ({
-    all: total, eligible: eligible.length, grey_zone: grey_zone.length, not_eligible: not_eligible.length,
-  }[key])
+  const tabCount = (key) => ({ all: total, eligible: eligible.length, grey_zone: grey_zone.length, not_eligible: not_eligible.length }[key])
 
   return (
-    <div className="min-h-screen" style={{ background: 'radial-gradient(ellipse at bottom left, #1e1b4b 0%, #0a0a1a 55%)' }}>
+    <div className="min-h-screen bg-[#F0F4F8] flex flex-col">
 
-      {/* ── Nav ── */}
-      <nav className="sticky top-0 z-30 flex items-center justify-between px-5 md:px-10 py-4 glass border-b border-white/5">
-        <button
-          onClick={() => { resetWizard(); navigate('/wizard') }}
-          className="text-white/60 hover:text-white text-sm font-medium transition-colors"
-          aria-label="Check again"
-        >
-          {t('check_again')}
-        </button>
+      {/* Tricolor */}
+      <div className="tricolor-bar" />
 
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-sm font-black">
-            स
-          </div>
-          <span className="text-white font-bold text-sm hidden sm:block">{t('app_name')}</span>
+      {/* Accessibility bar */}
+      <div className="bg-[#1a2332] text-white text-xs py-1.5 px-4 md:px-10 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <button onClick={() => setScreenReader(!screenReader)} className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors ${screenReader ? 'bg-[#FF6600] text-white font-bold' : 'hover:bg-white/10'}`}>
+            <span>♿</span> <span>{screenReader ? 'Screen Reader ON' : 'Accessible Portal'}</span>
+          </button>
+          <span className="hidden sm:inline text-white/70">&nbsp;·&nbsp; 🔊 Voice Enabled</span>
         </div>
+        <LanguageSwitcher variant="dark" />
+      </div>
 
-        <LanguageSwitcher />
-      </nav>
+      {/* Government Header */}
+      <header className="bg-[#1a3569] shadow-gov sticky top-0 z-30">
+        <nav className="max-w-4xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between">
+          <button
+            onClick={() => { resetWizard(); navigate('/wizard') }}
+            className="text-white/80 hover:text-white text-sm font-medium transition-colors border border-white/20 rounded px-3 py-1.5"
+          >
+            {t('check_again')}
+          </button>
+          <button onClick={() => navigate('/')} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center text-lg">♿</div>
+            <span className="text-white font-bold text-sm hidden sm:block">{t('app_name')} — Eligibility Report</span>
+          </button>
+          <button onClick={() => navigate('/')} className="text-white/80 hover:text-white text-sm border border-white/20 rounded px-3 py-1.5 transition-colors">
+            🏠 Home
+          </button>
+        </nav>
+      </header>
 
-      <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+      {/* Saffron breadcrumb */}
+      <div className="bg-[#FF6600] text-white text-xs py-1.5 px-4 md:px-8">
+        <div className="max-w-4xl mx-auto flex items-center gap-2">
+          <button onClick={() => navigate('/')} className="hover:underline opacity-90">Home</button>
+          <span>›</span>
+          <button onClick={() => { resetWizard(); navigate('/wizard') }} className="hover:underline opacity-90">Wizard</button>
+          <span>›</span>
+          <span className="font-semibold">Your Eligibility Report</span>
+        </div>
+      </div>
 
-        {/* ── Header ── */}
+      <div className="max-w-4xl mx-auto px-4 md:px-8 py-8 space-y-6 flex-1">
+
+        {/* Page title */}
         <div className="animate-slide-in-up">
-          <h1 className="text-2xl md:text-3xl font-black text-white">
-            {formData.firstName ? `${formData.firstName}'s ` : ''}{t('results_title')}
-          </h1>
-          <p className="text-white/50 mt-1 text-sm">{t('results_subtitle')}</p>
+          <div className="flex items-center gap-3 mb-1">
+            <div className="h-8 w-1.5 rounded-full bg-[#FF6600]" />
+            <h1 className="text-2xl md:text-3xl font-black text-[#1a3569]">
+              {formData.firstName ? `${formData.firstName}'s ` : ''}{t('results_title')}
+            </h1>
+          </div>
+          <p className="text-[#5C6B7A] text-sm ml-5">{t('results_subtitle')}</p>
         </div>
 
-        {/* ── Score card ── */}
+        {/* Score card */}
         <div className="animate-slide-in-up" style={{ animationDelay: '80ms' }}>
           <EligibilityScore results={results} />
         </div>
 
-        {/* ── Tabs ── */}
+        {/* Tabs */}
         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 animate-slide-in-up" style={{ animationDelay: '120ms' }}>
-          {TABS.map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              aria-pressed={activeTab === tab.key}
-              className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border transition-all
-                ${activeTab === tab.key
-                  ? 'bg-purple-600 border-purple-500 text-white shadow-lg'
-                  : 'glass border-white/10 text-white/60 hover:text-white hover:border-white/20'
+          {TABS.map(tab => {
+            const count = tabCount(tab.key)
+            const isActive = activeTab === tab.key
+            return (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                aria-pressed={isActive}
+                className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-semibold border transition-all ${
+                  isActive
+                    ? 'bg-[#1a3569] border-[#1a3569] text-white shadow-gov'
+                    : 'bg-white border-gov-border text-[#5C6B7A] hover:border-[#1a3569] hover:text-[#1a3569]'
                 }`}
-            >
-              <span>{tab.icon}</span>
-              <span>{tab.label}</span>
-              <span className={`px-1.5 py-0.5 rounded-full text-xs
-                ${activeTab === tab.key ? 'bg-white/20 text-white' : 'bg-white/10 text-white/40'}`}>
-                {tabCount(tab.key)}
-              </span>
-            </button>
-          ))}
+              >
+                <span>{tab.icon}</span>
+                <span className="hidden sm:inline">{tab.label}</span>
+                <span className={`px-1.5 py-0.5 rounded-full text-xs font-bold ${
+                  isActive ? 'bg-white/20 text-white' : 'bg-[#F0F4F8] text-[#5C6B7A]'
+                }`}>
+                  {count}
+                </span>
+              </button>
+            )
+          })}
         </div>
 
-        {/* ── Scheme cards ── */}
+        {/* Scheme cards */}
         <div className="space-y-3">
           {displayed.length === 0 ? (
-            <div className="glass rounded-2xl p-10 text-center">
-              <p className="text-white/30 text-lg">No schemes in this category</p>
+            <div className="gov-card p-12 text-center">
+              <div className="text-4xl mb-3">🔍</div>
+              <p className="text-[#5C6B7A] text-base">No schemes in this category</p>
             </div>
           ) : (
             displayed.map((scheme, i) => (
@@ -131,37 +159,50 @@ export default function ResultsPage() {
           )}
         </div>
 
-        {/* ── Gray Zone Map Panel ── */}
+        {/* Grey Zone Map Panel */}
         {displayedDocsMissing.length > 0 && (
           <div className="animate-slide-in-up" style={{ animationDelay: '200ms' }}>
             <GreyZoneMapPanel missingDocs={displayedDocsMissing} />
           </div>
         )}
 
-        {/* ── Recommendation footer ── */}
-        <div className="glass rounded-2xl p-5 flex items-start gap-4 animate-slide-in-up">
+        {/* Recommendation tip */}
+        <div className="bg-[#EEF2FF] border border-blue-200 rounded-lg p-5 flex items-start gap-4 animate-slide-in-up">
           <span className="text-3xl">💡</span>
           <div>
-            <p className="text-white font-semibold text-sm">Recommendation Engine</p>
-            <p className="text-white/50 text-xs mt-1">
-              Based on your profile, persons like you have also benefited from{' '}
-              <span className="text-purple-300 font-medium">ADIP Scheme</span> and{' '}
-              <span className="text-purple-300 font-medium">State Disability Pension</span>.
-              Make sure to explore the Grey Zone schemes — many can be unlocked quickly.
+            <p className="text-[#1a3569] font-bold text-sm">Official Scheme Recommendation</p>
+            <p className="text-[#5C6B7A] text-xs mt-1 leading-relaxed">
+              Based on your profile, people like you also benefit from{' '}
+              <span className="text-[#1a3569] font-semibold">ADIP Scheme</span> and{' '}
+              <span className="text-[#1a3569] font-semibold">State Disability Pension</span>.
+              Grey Zone schemes can often be unlocked by obtaining just one or two documents.
             </p>
           </div>
         </div>
 
-        {/* ── Home button ── */}
-        <div className="text-center pb-4">
-          <button onClick={() => navigate('/')}
-            className="px-6 py-3 rounded-xl glass border border-white/10 hover:border-white/25 text-white/60 hover:text-white text-sm font-medium transition-all">
-            ← Back to Home
+        {/* Action buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 pb-6">
+          <button
+            onClick={() => { resetWizard(); navigate('/wizard') }}
+            className="gov-btn-secondary flex-1 py-3 rounded-md text-sm"
+          >
+            ← Check Eligibility Again
+          </button>
+          <button
+            onClick={() => navigate('/')}
+            className="gov-btn-primary flex-1 py-3 rounded-md text-sm"
+          >
+            🏠 Back to Home
           </button>
         </div>
       </div>
 
-      {/* ── Document Guidance Panel ── */}
+      {/* Footer */}
+      <footer className="bg-[#0d1f3c] text-white/40 py-3 px-4 text-center text-xs">
+        © 2025 Sahayak · Government of India · Ministry of Social Justice &amp; Empowerment
+      </footer>
+
+      {/* Document Guidance Panel */}
       {guidanceDoc && (
         <DocumentGuidancePanel
           docKey={guidanceDoc}
