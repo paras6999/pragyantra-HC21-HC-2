@@ -37,6 +37,9 @@ export default function ResultsPage() {
 
   const { eligible, grey_zone, not_eligible, total } = results
 
+  // Only recommend schemes this user can actually get
+  const recommended = [...eligible, ...grey_zone].slice(0, 2).map(s => s.scheme_name)
+
   const FILTERED = {
     all:          [...eligible, ...grey_zone, ...not_eligible],
     eligible,
@@ -172,9 +175,12 @@ export default function ResultsPage() {
           <div>
             <p className="text-[#1a3569] font-bold text-sm">Official Scheme Recommendation</p>
             <p className="text-[#5C6B7A] text-xs mt-1 leading-relaxed">
-              Based on your profile, people like you also benefit from{' '}
-              <span className="text-[#1a3569] font-semibold">ADIP Scheme</span> and{' '}
-              <span className="text-[#1a3569] font-semibold">State Disability Pension</span>.
+              {recommended.length > 0 && (
+                <>
+                  Based on your profile, start with{' '}
+                  <span className="text-[#1a3569] font-semibold">{recommended.join(' and ')}</span>.{' '}
+                </>
+              )}
               Grey Zone schemes can often be unlocked by obtaining just one or two documents.
             </p>
           </div>

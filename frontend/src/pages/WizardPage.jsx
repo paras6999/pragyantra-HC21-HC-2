@@ -59,6 +59,7 @@ export default function WizardPage() {
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(payload),
       })
+      if (!response.ok) throw new Error(`Server error ${response.status}`)
       const data = await response.json()
       setResults(data)
       navigate('/results')

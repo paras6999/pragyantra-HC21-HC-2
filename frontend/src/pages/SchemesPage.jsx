@@ -27,7 +27,7 @@ function sortSchemes(schemes, sortBy) {
     case 'name_asc':    return arr.sort((a, b) => a.name.localeCompare(b.name))
     case 'name_desc':   return arr.sort((a, b) => b.name.localeCompare(a.name))
     case 'income_asc':  return arr.sort((a, b) => (a.eligibility_rules?.max_income ?? Infinity) - (b.eligibility_rules?.max_income ?? Infinity))
-    case 'income_desc': return arr.sort((a, b) => (b.eligibility_rules?.max_income ?? 0) - (a.eligibility_rules?.max_income ?? 0))
+    case 'income_desc': return arr.sort((a, b) => (b.eligibility_rules?.max_income ?? Number.MAX_SAFE_INTEGER) - (a.eligibility_rules?.max_income ?? Number.MAX_SAFE_INTEGER))
     default:            return arr
   }
 }

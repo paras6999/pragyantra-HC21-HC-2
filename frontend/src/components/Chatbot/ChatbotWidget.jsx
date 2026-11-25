@@ -27,14 +27,16 @@ export default function ChatbotWidget() {
   const renderText = (text) => {
     const lines = text.split('\n')
     return lines.map((line, i) => {
+      // Strip the bullet marker before parsing bold, so no text is lost
+      const bullet = line.match(/^\s*[*\-•]\s+(.*)$/)
       // Bold
-      const parts = line.split(/\*\*(.*?)\*\*/g)
+      const parts = (bullet ? bullet[1] : line).split(/\*\*(.*?)\*\*/g)
       const rendered = parts.map((part, j) =>
         j % 2 === 1 ? <strong key={j}>{part}</strong> : part
       )
       // Bullet
-      if (line.trim().startsWith('* ') || line.trim().startsWith('- ') || line.trim().startsWith('• ')) {
-        return <li key={i} className="ml-3 list-disc">{rendered.slice(1)}</li>
+      if (bullet) {
+        return <li key={i} className="ml-3 list-disc">{rendered}</li>
       }
       return <span key={i}>{rendered}{i < lines.length - 1 && <br />}</span>
     })

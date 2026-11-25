@@ -1,6 +1,7 @@
 import { useApp } from '../../context/AppContext'
 import ToggleSwitch from '../shared/ToggleSwitch'
 import VoiceButton  from '../Voice/VoiceButton'
+import parseYesNo   from '../Voice/parseYesNo'
 
 export default function Step3_Disability({ onNext, onBack }) {
   const { formData, updateFormData, t } = useApp()
@@ -8,12 +9,13 @@ export default function Step3_Disability({ onNext, onBack }) {
   const pct = Number(formData.disability_percent) || 0
 
   const handleVoice = (transcript) => {
-    const isYes = /yes|haan|ho|हाँ|होय/.test(transcript)
-    const isNo  = /no|nahi|nahin|नहीं|नाही/.test(transcript)
+    const answer = parseYesNo(transcript)
     const numMatch = transcript.match(/(\d+)/)
-    if (isYes) updateFormData({ has_disability_cert: true })
-    if (isNo)  updateFormData({ has_disability_cert: false })
-    if (numMatch && formData.has_disability_cert) updateFormData({ disability_percent: numMatch[1] })
+    if (answer !== null) updateFormData({ has_disability_cert: answer })
+    if (answer === false) updateFormData({ disability_percent: 0 })
+    // "Yes, 50 percent" must work in one sentence
+    const hasCert = answer ?? formData.has_disability_cert
+    if (numMatch && hasCert) updateFormData({ disability_percent: Math.min(100, Number(numMatch[1])) })
   }
 
   return (

@@ -69,5 +69,10 @@
   "reason_label": "कारण",
   "check_again": "← फिर जाँचें",
   "loading": "पात्रता जाँची जा रही है…",
-  "score_label": "योजनाओं के लिए पात्र हैं"
+  "score_label": "योजनाओं के लिए पात्र हैं",
+  "guidance_title": "दस्तावेज़ मार्गदर्शन",
+  "steps_label": "अपनाने के चरण",
+  "unlock_engine_title": "दस्तावेज़ अनलॉक सुझाव",
+  "unlocks": "इससे खुलता है",
+  "where_to_get": "कहाँ से प्राप्त करें"
 }
