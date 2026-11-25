@@ -2,11 +2,17 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
 import os
+import time
 import requests
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
 import sys
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8')
 
 BASE = os.path.dirname(__file__)
 sys.path.insert(0, BASE)
@@ -14,17 +20,14 @@ load_dotenv(os.path.join(BASE, '.env'))
 
 # ── API Keys ──────────────────────────────────────────────────────────────────
 GEMINI_API_KEY  = os.environ.get("GEMINI_API_KEY")
-GOOGLE_MAPS_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
 
-# gemini-2.5-flash confirmed working for this API key
-GEMINI_ENDPOINTS = [
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}",
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={key}",
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key={key}",
-]
+GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models"
+# Tried in order until one answers
+GEMINI_MODELS = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-3.8-flash"]
+GEMINI_TIME_BUDGET = 9  # seconds, across all models
 
 if GEMINI_API_KEY:
-    print(f"✅  Gemini API key loaded (REST mode) — key ends with ...{GEMINI_API_KEY[-6:]}")
+    print("✅  Gemini API key loaded (REST mode)")
 else:
     print("⚠️  GEMINI_API_KEY not set — chatbot will use offline fallback")
 
@@ -86,21 +89,16 @@ def call_gemini_rest(user_message, history):
         return None, "No API key"
 
     # Build conversation contents
-    # Prepend system prompt directly into the first user message (universally compatible)
     contents = []
     for msg in history:
         role = "user" if msg.get("role") == "user" else "model"
         contents.append({"role": role, "parts": [{"text": msg.get("text", "")}]})
 
-    # If no history, prepend system prompt to current message
-    if not contents:
-        full_user_msg = f"{SYSTEM_PROMPT}\n\nUser question: {user_message}"
-    else:
-        full_user_msg = user_message
-
-    contents.append({"role": "user", "parts": [{"text": full_user_msg}]})
+    contents.append({"role": "user", "parts": [{"text": user_message}]})
 
     payload = {
+        # Sent on every turn so follow-up questions keep the same instructions
+        "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]},
         "contents": contents,
         "generationConfig": {
             "temperature": 0.7,
@@ -109,24 +107,39 @@ def call_gemini_rest(user_message, history):
     }
 
     last_error = "No endpoints tried"
-    for endpoint_template in GEMINI_ENDPOINTS:
-        url = endpoint_template.format(key=GEMINI_API_KEY)
+    # One shared time budget, so retries can't outlast the serverless function timeout
+    deadline = time.monotonic() + GEMINI_TIME_BUDGET
+    for model in GEMINI_MODELS:
+        remaining = deadline - time.monotonic()
+        if remaining < 1:
+            break
+
+        # 2.5 Flash "thinking" uses up the output tokens and truncates replies
+        config = dict(payload["generationConfig"])
+        if model == "gemini-2.5-flash":
+            config["thinkingConfig"] = {"thinkingBudget": 0}
+
         try:
-            resp = requests.post(url, json=payload, timeout=5)
+            # Key goes in a header so it never appears in URLs or error messages
+            resp = requests.post(
+                f"{GEMINI_BASE}/{model}:generateContent",
+                headers={"x-goog-api-key": GEMINI_API_KEY},
+                json={**payload, "generationConfig": config},
+                timeout=remaining,
+            )
             data = resp.json()
 
             if resp.status_code == 200:
                 text = data["candidates"][0]["content"]["parts"][0]["text"]
-                model_name = url.split("models/")[1].split(":")[0]
-                print(f"✅ Gemini success via: {model_name}")
+                print(f"✅ Gemini success via: {model}")
                 return text, None
 
             err_msg = data.get("error", {}).get("message", str(data))
-            print(f"❌ {url.split('models/')[1].split('?')[0]}: {err_msg[:120]}")
+            print(f"❌ {model}: {err_msg[:120]}")
             last_error = err_msg
 
         except Exception as e:
-            print(f"❌ Exception: {e}")
+            print(f"❌ {model}: {e}")
             last_error = str(e)
 
     return None, last_error
@@ -250,8 +263,8 @@ def list_models():
         # Try both v1 and v1beta
         results = {}
         for version in ["v1", "v1beta"]:
-            url = f"https://generativelanguage.googleapis.com/{version}/models?key={GEMINI_API_KEY}"
-            resp = requests.get(url, timeout=10)
+            url = f"https://generativelanguage.googleapis.com/{version}/models"
+            resp = requests.get(url, headers={"x-goog-api-key": GEMINI_API_KEY}, timeout=10)
             data = resp.json()
             if resp.status_code == 200:
                 models = [m["name"] for m in data.get("models", [])
@@ -262,13 +275,6 @@ def list_models():
         return jsonify(results)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-@app.route("/api/maps_key", methods=["GET"])
-def get_maps_key():
-    if not GOOGLE_MAPS_KEY:
-        return jsonify({"error": "GOOGLE_MAPS_API_KEY not configured"}), 500
-    return jsonify({"key": GOOGLE_MAPS_KEY})
 
 
 @app.route("/api/categories", methods=["GET"])
@@ -296,9 +302,14 @@ def get_schemes():
 @app.route("/api/check_eligibility", methods=["POST"])
 def check_eligibility():
     from eligibility_engine import run_eligibility
-    data    = request.get_json(force=True)
+    data = request.get_json(force=True, silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "Invalid JSON body"}), 400
     schemes = load_schemes()
-    results = run_eligibility(data, schemes)
+    try:
+        results = run_eligibility(data, schemes)
+    except (ValueError, TypeError):
+        return jsonify({"error": "age, income and disability_percent must be numbers"}), 400
     return jsonify(results)
 
 
@@ -312,9 +323,10 @@ def get_document_guidance(doc_id):
 
 @app.route("/api/chat", methods=["POST"])
 def chat():
-    data         = request.get_json(force=True)
-    user_message = data.get("message", "").strip()
-    history      = data.get("history", [])
+    data         = request.get_json(force=True, silent=True)
+    data         = data if isinstance(data, dict) else {}
+    user_message = str(data.get("message") or "").strip()
+    history      = data.get("history") or []
 
     if not user_message:
         return jsonify({"error": "Empty message"}), 400
@@ -322,7 +334,7 @@ def chat():
     # Try Gemini REST API first (no SDK required)
     reply, error = call_gemini_rest(user_message, history)
     if reply:
-        return jsonify({"reply": reply, "engine": "gemini-1.5-flash"})
+        return jsonify({"reply": reply, "engine": "gemini"})
 
     print(f"Using offline fallback. Gemini error: {error}")
     return jsonify({"reply": smart_fallback(user_message), "engine": "offline"})
@@ -334,8 +346,12 @@ def nearby_centers():
     lng         = request.args.get("lng")
     center_type = request.args.get("type", "government_office")
 
-    if not lat or not lng:
-        return jsonify({"error": "Missing lat or lng"}), 400
+    try:
+        lat, lng = float(lat), float(lng)
+    except (TypeError, ValueError):
+        return jsonify({"error": "lat and lng must be numbers"}), 400
+    if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+        return jsonify({"error": "lat or lng out of range"}), 400
 
     type_map = {
         "hospital":      'node["amenity"="hospital"]',
@@ -345,6 +361,8 @@ def nearby_centers():
         "internet_cafe": 'node["amenity"="internet_cafe"]',
         "studio":        'node["shop"="photo"]',
     }
+    if center_type not in type_map:
+        center_type = "government_office"
     query_node = type_map.get(center_type, 'node["office"="government"]')
 
     overpass_query = f"""
@@ -354,15 +372,16 @@ def nearby_centers():
     """
     try:
         res     = requests.post("http://overpass-api.de/api/interpreter",
-                                data={"data": overpass_query}, timeout=10)
+                                data={"data": overpass_query},
+                                headers={"User-Agent": "Sahayak/1.0"}, timeout=10)
         
         try:
             data = res.json()
         except ValueError:
             # Overpass API rate limited or returned HTML. Use mock data for demo.
             return jsonify([
-                {"id": 1, "name": f"Government {center_type.replace('_',' ').title()} (Demo)", "address": "Sector 1, City Center", "lat": float(lat) + 0.005, "lng": float(lng) + 0.005, "type": center_type},
-                {"id": 2, "name": f"Local Help Desk", "address": "Market Road", "lat": float(lat) - 0.008, "lng": float(lng) - 0.002, "type": center_type}
+                {"id": 1, "name": f"Government {center_type.replace('_',' ').title()} (Demo)", "address": "Sector 1, City Center", "lat": lat + 0.005, "lng": lng + 0.005, "type": center_type},
+                {"id": 2, "name": "Local Help Desk (Demo)", "address": "Market Road", "lat": lat - 0.008, "lng": lng - 0.002, "type": center_type}
             ])
 
         centers = []
@@ -379,8 +398,8 @@ def nearby_centers():
         # If no centers found, return mock data anyway so the map isn't empty
         if not centers:
             return jsonify([
-                {"id": 1, "name": f"Government {center_type.replace('_',' ').title()} (Demo)", "address": "Sector 1, City Center", "lat": float(lat) + 0.005, "lng": float(lng) + 0.005, "type": center_type},
-                {"id": 2, "name": f"Local Help Desk", "address": "Market Road", "lat": float(lat) - 0.008, "lng": float(lng) - 0.002, "type": center_type}
+                {"id": 1, "name": f"Government {center_type.replace('_',' ').title()} (Demo)", "address": "Sector 1, City Center", "lat": lat + 0.005, "lng": lng + 0.005, "type": center_type},
+                {"id": 2, "name": "Local Help Desk (Demo)", "address": "Market Road", "lat": lat - 0.008, "lng": lng - 0.002, "type": center_type}
             ])
             
         return jsonify(centers)
@@ -389,4 +408,4 @@ def nearby_centers():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=os.environ.get("FLASK_DEBUG") == "1", host="0.0.0.0", port=5000)

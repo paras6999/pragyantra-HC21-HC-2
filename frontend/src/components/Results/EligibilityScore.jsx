@@ -74,7 +74,7 @@ export default function EligibilityScore({ results }) {
             <p className="text-[#1a3569] font-bold text-sm">{t('unlock_engine_title')}</p>
             <p className="text-[#5C6B7A] text-xs mt-0.5">
               Get your <span className="text-[#1a3569] font-semibold">{topUnlocker[0].replace(/_/g, ' ')}</span>{' '}
-              → unlock <span className="text-[#FF6600] font-bold">{topUnlocker[1]} more scheme{topUnlocker[1] > 1 ? 's' : ''}</span>
+              → needed for <span className="text-[#FF6600] font-bold">{topUnlocker[1]} Grey Zone scheme{topUnlocker[1] > 1 ? 's' : ''}</span>
             </p>
           </div>
         </div>

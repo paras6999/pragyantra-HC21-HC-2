@@ -5,11 +5,16 @@ export default function GreyZoneMapPanel({ missingDocs = [] }) {
   const [docDetails, setDocDetails] = useState([])
   const [selectedDoc, setSelectedDoc] = useState(null)
 
+  // The parent builds a new array on every render, so depend on its contents.
+  // Otherwise each re-render refetches and resets the selected document.
+  const docsKey = missingDocs.join(',')
+
   useEffect(() => {
+    let cancelled = false
     // Fetch guidance for all missing docs
     const fetchGuidance = async () => {
       const details = []
-      for (const docKey of missingDocs) {
+      for (const docKey of docsKey.split(',').filter(Boolean)) {
         try {
           const res = await fetch(`/api/document_guidance/${docKey}`)
           if (res.ok) {
@@ -20,14 +25,14 @@ export default function GreyZoneMapPanel({ missingDocs = [] }) {
           console.error("Failed to fetch guidance for", docKey)
         }
       }
+      if (cancelled) return
       setDocDetails(details)
-      if (details.length > 0) setSelectedDoc(details[0])
+      setSelectedDoc(prev => details.find(d => d.key === prev?.key) || details[0] || null)
     }
 
-    if (missingDocs.length > 0) {
-      fetchGuidance()
-    }
-  }, [missingDocs])
+    fetchGuidance()
+    return () => { cancelled = true }
+  }, [docsKey])
 
   if (missingDocs.length === 0) return null
 
@@ -40,7 +45,7 @@ export default function GreyZoneMapPanel({ missingDocs = [] }) {
         <span className="text-xl">🟡</span>
         <h3 className="text-lg font-bold text-[#1a3569]">Missing Documents Action Plan</h3>
       </div>
-
+      
       <p className="text-sm text-[#5C6B7A] mb-5">
         You need these documents to become eligible. Select a document to see where to get it nearby.
       </p>
@@ -53,10 +58,11 @@ export default function GreyZoneMapPanel({ missingDocs = [] }) {
             <button
               key={doc.key}
               onClick={() => setSelectedDoc(doc)}
-              className={`flex-shrink-0 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${isSelected
-                  ? 'bg-amber-100 text-amber-800 border border-amber-300 shadow-sm'
+              className={`flex-shrink-0 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                isSelected 
+                  ? 'bg-amber-100 text-amber-800 border border-amber-300 shadow-sm' 
                   : 'bg-gray-50 text-[#5C6B7A] border border-gray-200 hover:bg-gray-100 hover:text-[#1a3569]'
-                }`}
+              }`}
             >
               {doc.icon} {doc.name}
             </button>
@@ -71,7 +77,7 @@ export default function GreyZoneMapPanel({ missingDocs = [] }) {
             <h4 className="text-[#1a3569] font-bold mb-3 flex items-center gap-2 bg-blue-50/50 p-2 rounded-lg border border-blue-100">
               <span>📍</span> Go to: {selectedDoc.where_to_get}
             </h4>
-
+            
             <div className="space-y-3 mb-4">
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <span className="text-[#1a3569] font-bold block text-xs uppercase tracking-wider mb-2 border-b border-gray-200 pb-1">Steps to Follow</span>

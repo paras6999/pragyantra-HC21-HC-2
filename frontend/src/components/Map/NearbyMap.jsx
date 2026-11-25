@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 
+// Place names come from public OpenStreetMap data, so escape them before using as HTML
+const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, c => (
+  { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+))
+
 export default function NearbyMap({ docType = 'government_office' }) {
   const mapRef = useRef(null)
   const mapInstance = useRef(null)
@@ -7,8 +12,12 @@ export default function NearbyMap({ docType = 'government_office' }) {
   const [centers, setCenters] = useState([])
   const [userLocation, setUserLocation] = useState(null)
   const [errorMsg, setErrorMsg] = useState('')
+  const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
+    let cancelled = false
+    setStatus('locating')
+
     // 1. Get user location
     if (!navigator.geolocation) {
       setStatus('error')
@@ -18,34 +27,39 @@ export default function NearbyMap({ docType = 'government_office' }) {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        if (cancelled) return
         const { latitude, longitude } = position.coords
         setUserLocation({ lat: latitude, lng: longitude })
-        fetchCenters(latitude, longitude)
+        fetchCenters(latitude, longitude, () => cancelled)
       },
-      (error) => {
+      () => {
+        if (cancelled) return
         setStatus('error')
         setErrorMsg('Could not get your location. Please enable location services.')
       }
     )
 
     return () => {
+      cancelled = true
       if (mapInstance.current) {
         mapInstance.current.off()
         mapInstance.current.remove()
         mapInstance.current = null
       }
     }
-  }, [docType])
+  }, [docType, attempt])
 
-  const fetchCenters = async (lat, lng) => {
+  const fetchCenters = async (lat, lng, isStale) => {
     setStatus('loading')
     try {
       const res = await fetch(`/api/nearby_centers?lat=${lat}&lng=${lng}&type=${docType}`)
       const data = await res.json()
+      if (isStale()) return
       if (!res.ok) throw new Error(data.details || data.error || 'API Error')
       setCenters(data)
       setStatus('ready')
     } catch (err) {
+      if (isStale()) return
       setStatus('error')
       setErrorMsg(err.message || 'Could not fetch nearby centers. Please try again.')
     }
@@ -72,7 +86,7 @@ export default function NearbyMap({ docType = 'government_office' }) {
 
       // User Marker
       const userIcon = window.L.icon({
-        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
         iconSize: [25, 41],
         iconAnchor: [12, 41],
@@ -92,8 +106,8 @@ export default function NearbyMap({ docType = 'government_office' }) {
           
           const popupContent = `
             <div class="text-[#1A2332] p-1 font-sans">
-              <h3 class="font-bold text-sm mb-1">${c.name}</h3>
-              <p class="text-xs mb-2 text-[#5C6B7A]">${c.address}</p>
+              <h3 class="font-bold text-sm mb-1">${escapeHtml(c.name)}</h3>
+              <p class="text-xs mb-2 text-[#5C6B7A]">${escapeHtml(c.address)}</p>
               <a href="https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lng}" 
                  target="_blank" 
                  class="inline-block px-3 py-1.5 bg-[#1a3569] text-white rounded text-xs font-semibold hover:bg-[#0d1f3c] transition">
@@ -128,7 +142,7 @@ export default function NearbyMap({ docType = 'government_office' }) {
               <p className="text-red-700 font-semibold mb-1">⚠️ Error</p>
               <p className="text-red-600 text-sm max-w-xs mx-auto">{errorMsg}</p>
               <button 
-                onClick={() => setStatus('locating')} 
+                onClick={() => setAttempt(a => a + 1)} 
                 className="mt-3 px-4 py-1.5 bg-red-100 hover:bg-red-200 text-red-800 rounded text-xs font-bold transition"
               >
                 Retry Location

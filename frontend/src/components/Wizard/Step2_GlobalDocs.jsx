@@ -1,6 +1,7 @@
 import { useApp } from '../../context/AppContext'
 import ToggleSwitch from '../shared/ToggleSwitch'
 import VoiceButton  from '../Voice/VoiceButton'
+import parseYesNo   from '../Voice/parseYesNo'
 
 const DOCS = [
   { key: 'passport_photo', labelKey: 'passport_photo_label', descKey: 'passport_photo_desc' },
@@ -11,10 +12,8 @@ export default function Step2_GlobalDocs({ onNext, onBack }) {
   const { formData, updateFormData, t } = useApp()
 
   const handleVoice = (transcript) => {
-    const isYes = /yes|haan|ho|हाँ|होय/.test(transcript)
-    const isNo  = /no|nahi|nahin|नहीं|नाही/.test(transcript)
-    if (isYes && !formData.passport_photo) updateFormData({ passport_photo: true })
-    if (isNo)                              updateFormData({ passport_photo: false })
+    const answer = parseYesNo(transcript)
+    if (answer !== null) updateFormData({ passport_photo: answer })
   }
 
   return (
